@@ -1,0 +1,92 @@
+{
+  "project_info": {
+    "project_number": "586129504049",
+    "project_id": "shetkari-basket",
+    "storage_bucket": "shetkari-basket.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:586129504049:android:baf6e16d03daba7e1ae210",
+        "android_client_info": {
+          "package_name": "com.example.shoppy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "586129504049-r943pq2s3vl751j5lfdjtujdr2odut0d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgTDZa8cmbMB7q4OV65MjR32KuNzC1jrI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "586129504049-r943pq2s3vl751j5lfdjtujdr2odut0d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:586129504049:android:ef1708d9fa0b31121ae210",
+        "android_client_info": {
+          "package_name": "com.flutter.shetkaribasket"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "586129504049-4j6rv30lbpq9n9gc33ihdbo4va82ph60.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.flutter.shetkaribasket",
+            "certificate_hash": "e9a095f40e3b60a6b72179532419e50e0420b31b"
+          }
+        },
+        {
+          "client_id": "586129504049-jumtg9mg9abu20l9i0up8em4uv4bike3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.flutter.shetkaribasket",
+            "certificate_hash": "7d92f658b937d41dc41b2a2b8e24316ded8a06ee"
+          }
+        },
+        {
+          "client_id": "586129504049-mqcqsd5je3tr0mgvtrhq8bqfsftf60ip.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.flutter.shetkaribasket",
+            "certificate_hash": "67769591d2b9c38431c75d6d11787f654e7e1b96"
+          }
+        },
+        {
+          "client_id": "586129504049-r943pq2s3vl751j5lfdjtujdr2odut0d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgTDZa8cmbMB7q4OV65MjR32KuNzC1jrI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "586129504049-r943pq2s3vl751j5lfdjtujdr2odut0d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
