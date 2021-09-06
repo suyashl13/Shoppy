@@ -16,7 +16,9 @@ class CustomUser(AbstractUser):
     USERNAME_FIELD = 'phone'
     REQUIRED_FIELDS = ['address']
 
+    is_admin_subdealer = models.BooleanField(default=False)
     is_subdealer = models.BooleanField(default=False)
+    is_subdealer_staff = models.BooleanField(default=False)
 
     pincode = models.CharField(max_length=6)
     is_active = models.BooleanField(default=True)

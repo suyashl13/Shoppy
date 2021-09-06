@@ -32,8 +32,8 @@ class UserSerializers(ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
         fields = (
             'id', 'name', 'email', 'password',
-            'is_active', 'phone', 'is_staff', 'pincode', 'address', 'is_subdealer', 'date_time_created',
-            'date_time_updated')
+            'is_active', 'phone', 'is_staff', 'pincode', 'address', 'is_subdealer', 'is_admin_subdealer',
+            'date_time_created', 'date_time_updated')
 
 
 class SessionSerializer(ModelSerializer):

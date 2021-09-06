@@ -68,7 +68,12 @@ def subdealer_route(request: WSGIRequest) -> JsonResponse:
                 try:
                     if request.POST.dict()['ref_code'] is not None:
                         try:
-                            new_subdealer.added_by = Subdealer.objects.get(subdealer_code=request.POST['ref_code'])
+                            temp_subdealer = Subdealer.objects.get(subdealer_code=request.POST['ref_code'])
+                            if temp_subdealer.user.is_admin_subdealer:
+                                new_subdealer.added_by = temp_subdealer
+                            else:
+                                return JsonResponse({'ERR': 'Refrence code does not belongs to admin subdealer.'},
+                                                    status=400)
                         except Exception as e:
                             print(type(e))
                             return JsonResponse({'ERR': 'Invalid refrence code.'}, status=400)
@@ -111,9 +116,30 @@ def subdealer_id_route(request: WSGIRequest, u_id: int) -> JsonResponse:
     if request.method == 'GET':
         if usr.id == u_id:
             subdealer_profile = SubdealerSerializer(Subdealer.objects.get(user=usr)).data
+            # TODO: Complete this module
+
+            staff = UserSerializers(CustomUser.objects.filter(reporting_to=usr, is_subdealer_staff=True),
+                                    many=True).data
+
+            if usr.is_admin_subdealer:
+                co_subdealers = []
+                for co_subdealer in SubdealerSerializer(
+                        Subdealer.objects.filter(added_by=Subdealer.objects.get(user=usr)), many=True).data:
+                    co_subdealer['user'] = UserSerializers(CustomUser.objects.get(id=co_subdealer['user'])).data
+                    co_subdealers.append(co_subdealer)
+            else:
+                co_subdealers = None
+
+            if not subdealer_profile['is_active']:
+                co_subdealers = []
+                staff = []
+
             return JsonResponse({
                 'user': UserSerializers(usr).data,
-                'subdealer': subdealer_profile})
+                'subdealer': subdealer_profile,
+                'staff': staff,
+                'co_subdealers': co_subdealers
+            }, safe=False)
         else:
             return JsonResponse({'ERR': 'Unauthorized'})
 
@@ -173,3 +199,39 @@ def subdealer_login_route(request: WSGIRequest) -> JsonResponse:
 
     else:
         return JsonResponse({'ERR': 'Invalid HTTP method.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+@csrf_exempt
+def subdealer_staff_id_route(request: WSGIRequest, staff_id: int):
+    auth_result = AuthHelper(request=request).check_authentication()
+
+    if auth_result['ERR']:
+        return JsonResponse({'ERR': auth_result['MSG']}, status=400)
+
+    usr = auth_result['user']
+
+    if request.method == 'PUT':
+
+        request_body = QueryDict(request.body).dict()
+
+        try:
+            staff_user = CustomUser.objects.get(id=staff_id)
+            if staff_user.reporting_to == usr:
+                for attr, val in request_body.items():
+                    if attr == 'is_active':
+                        if val == 'true':
+                            setattr(staff_user, attr, True)
+                        elif val == 'false':
+                            setattr(staff_user, attr, False)
+                    else:
+                        setattr(staff_user, attr, val)
+
+                staff_user.save()
+                return JsonResponse(UserSerializers(staff_user).data)
+            else:
+                return JsonResponse({'ERR': 'Unauthorized'}, status=401)
+        except Exception as e:
+            return JsonResponse({'ERR': str(e)}, status=400)
+
+    else:
+        return JsonResponse({'ERR': 'Invalid HTTP Method'}, status=400)
