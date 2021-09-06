@@ -56,7 +56,7 @@ export default function ProfilePage() {
                     <hr />
                     <ul className='list-group'>
                         {
-                            profile?.staff.map((v,i) => <SubdealerStaff key={i} staff={v}/>)
+                            profile?.staff.map((v,i) => <SubdealerStaff key={i} staff={v} />)
                         }
                     </ul>
                     <br />

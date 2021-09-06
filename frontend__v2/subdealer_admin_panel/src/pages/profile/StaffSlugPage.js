@@ -15,7 +15,7 @@ export default function StaffSlugPage(props) {
 
 
     if (!staff_profile) {
-        return <center className='pt-5 text-lg'>Something went wrong! Please go back and <Link className='text-primary' to='/'>Try again</Link> or wait.</center>
+        return <center className='pt-5 text-lg'>Something went wrong! Please go back and <Link className='text-primary' to='/profile'>Try again</Link> or wait.</center>
     }
 
 
@@ -32,14 +32,7 @@ export default function StaffSlugPage(props) {
             const updatedStaff = await e.json()
             if (e.status === 200) {
                 let updatedStaffArray = profile?.staff.map(
-                    (item, i) => {
-                        if (item.id == id) {
-                            return updatedStaff
-                        } else {
-                            return item
-                        }
-                    }
-                )
+                    (item) => { if (item.id == id) { return updatedStaff } else { return item } })
                 setProfile({ ...profile, staff: updatedStaffArray })
                 setIsLoading(false)
             } else {
@@ -87,13 +80,10 @@ export default function StaffSlugPage(props) {
                         <th scope="col">Active</th>
                         <td className='d-flex justify-content-between'><center>{staff_profile?.is_active ? 'Active' : 'Deactivated'}</center> <button
                             disabled={isLoading}
-                            className={
-                                isLoading ? 'btn btn-sm btn-secondary' :
-                                    staff_profile?.is_active ? 'btn btn-sm btn-danger' : 'btn btn-sm btn-success'}
-                            onClick={e => { updateStaffActivationStatus(!staff_profile?.is_active) }}
-                        >{
-                            isLoading ?<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> :
-                            staff_profile?.is_active ? 'Deactivate' : 'Activate'}
+                            className={isLoading ? 'btn btn-sm btn-secondary' : staff_profile?.is_active ? 'btn btn-sm btn-danger' : 'btn btn-sm btn-success'}
+                            onClick={e => { updateStaffActivationStatus(!staff_profile?.is_active) }}>{
+                                isLoading ? <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> :
+                                    staff_profile?.is_active ? 'Deactivate' : 'Activate'}
                         </button></td>
                     </tr>
                 </tbody>

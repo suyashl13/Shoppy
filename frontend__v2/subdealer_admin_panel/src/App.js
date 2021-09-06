@@ -18,6 +18,7 @@ import { profileContext } from './contexts/ProfileContext';
 import OrderSlugPage from './pages/order/OrderSlugPage';
 import SubdealerProductsPage from './pages/products/SubdealerProductsPage';
 import StaffSlugPage from './pages/profile/StaffSlugPage';
+import CoSubdealerSlugPage from './pages/profile/CoSubdealerSlugPage';
 
 
 function App() {
@@ -57,6 +58,7 @@ function App() {
               <ProtectedRoute exact path='/profile' component={ProfilePage} />
               <ProtectedRoute exact path='/products' component={SubdealerProductsPage} />
               <ProtectedRoute exact path='/profile/staff/:id' component={StaffSlugPage} />
+              <ProtectedRoute exact path='/profile/co_subdealer/:id' component={CoSubdealerSlugPage} />
             </Switch>
           </BrowserRouter>
         </profileContext.Provider>
