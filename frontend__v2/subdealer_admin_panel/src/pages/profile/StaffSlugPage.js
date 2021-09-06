@@ -1,6 +1,5 @@
-import axios from 'axios'
 import { stringify } from 'qs'
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { useParams } from 'react-router'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -12,6 +11,7 @@ export default function StaffSlugPage(props) {
     const { profile, setProfile } = useContext(profileContext)
     const { id } = useParams();
     const staff_profile = profile?.staff.filter(val => val.id == id)[0];
+    const [isLoading, setIsLoading] = useState(false)
 
 
     if (!staff_profile) {
@@ -20,6 +20,7 @@ export default function StaffSlugPage(props) {
 
 
     const updateStaffActivationStatus = async (isActive) => {
+        setIsLoading(true)
         await fetch(`${BASE_URL}users/subdealers/staff/${id}/`, {
             method: 'PUT',
             headers: {
@@ -33,22 +34,25 @@ export default function StaffSlugPage(props) {
                 let updatedStaffArray = profile?.staff.map(
                     (item, i) => {
                         if (item.id == id) {
-                            return item[i] = updatedStaff
+                            return updatedStaff
                         } else {
                             return item
                         }
                     }
                 )
                 setProfile({ ...profile, staff: updatedStaffArray })
+                setIsLoading(false)
             } else {
                 toast(updatedStaff.ERR, { type: 'error' })
+                setIsLoading(false)
             }
 
         })
-        .catch(err => {
-            toast('Unable to update staff status', { type: 'error' })
-            console.log({ err })
-        })
+            .catch(err => {
+                toast('Unable to update staff status.', { type: 'error' })
+                console.log({ err })
+                setIsLoading(false)
+            })
     }
 
     return (
@@ -81,9 +85,16 @@ export default function StaffSlugPage(props) {
                     </tr>
                     <tr>
                         <th scope="col">Active</th>
-                        <td className='d-flex justify-content-between'><center>{staff_profile?.is_active ? 'Active' : 'Deactivated'}</center> <button className={staff_profile?.is_active ? 'btn btn-sm btn-danger' : 'btn btn-sm btn-success'}
+                        <td className='d-flex justify-content-between'><center>{staff_profile?.is_active ? 'Active' : 'Deactivated'}</center> <button
+                            disabled={isLoading}
+                            className={
+                                isLoading ? 'btn btn-sm btn-secondary' :
+                                    staff_profile?.is_active ? 'btn btn-sm btn-danger' : 'btn btn-sm btn-success'}
                             onClick={e => { updateStaffActivationStatus(!staff_profile?.is_active) }}
-                        >{staff_profile?.is_active ? 'Deactivate' : 'Activate'}</button></td>
+                        >{
+                            isLoading ?<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> :
+                            staff_profile?.is_active ? 'Deactivate' : 'Activate'}
+                        </button></td>
                     </tr>
                 </tbody>
             </table>

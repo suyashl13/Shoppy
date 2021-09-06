@@ -11,7 +11,6 @@ import 'package:shoppy/screens/history/HistoryPage.dart';
 import 'package:shoppy/screens/home/HomePage.dart';
 import 'package:shoppy/screens/shop/ProductPage.dart';
 import 'package:shoppy/screens/shop/ShopPage.dart';
-import 'package:shoppy/screens/static/UpdateProfilePage.dart';
 
 
 void main() async {
