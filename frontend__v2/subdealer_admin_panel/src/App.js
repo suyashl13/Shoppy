@@ -17,6 +17,7 @@ import { orderContext } from './contexts/OrderContext';
 import { profileContext } from './contexts/ProfileContext';
 import OrderSlugPage from './pages/order/OrderSlugPage';
 import SubdealerProductsPage from './pages/products/SubdealerProductsPage';
+import StaffSlugPage from './pages/profile/StaffSlugPage';
 
 
 function App() {
@@ -55,6 +56,7 @@ function App() {
               <Route exact path='/register' component={RegisterSubdealerPage} />
               <ProtectedRoute exact path='/profile' component={ProfilePage} />
               <ProtectedRoute exact path='/products' component={SubdealerProductsPage} />
+              <ProtectedRoute exact path='/profile/staff/:id' component={StaffSlugPage} />
             </Switch>
           </BrowserRouter>
         </profileContext.Provider>

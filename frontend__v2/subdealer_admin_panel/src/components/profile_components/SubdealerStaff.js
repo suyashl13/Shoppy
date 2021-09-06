@@ -8,7 +8,7 @@ export default function SubdealerStaff(props) {
         <div className="ms-2 me-auto">
           <div className="fw-bold">{staff.name} ({staff.is_active ? 'Active' : 'Disabled'})</div> 
             Phone : {staff.phone}<br />
-            <Link to='/' className='btn btn-sm btn-primary mt-2 text-light' >Edit Staff</Link>
+            <Link to={'/profile/staff/' + staff.id} className='btn btn-sm btn-primary mt-2 text-light' >Edit Staff</Link>
         </div>
         <span className="badge bg-primary ml-1"></span>
       </li>

@@ -15,7 +15,6 @@ export default function ProfilePage() {
         if (!profile) {
             getSubdealerProfile({
                 onSuccess: (data) => {
-                    console.log(data)
                     setProfile(data);
                 },
                 onError: (err) => {
@@ -42,7 +41,7 @@ export default function ProfilePage() {
                         {profile?.subdealer.pincodes.split(',').map((v, i) => <li key={i} className='list-group-item'>{v}</li>)}
                     </ul>
                 </div>
-                <div className="col col-sm-12 col-lg-8 col-md-6">
+                <div className="col col-sm-12 col-lg-8 col-md-6 mb-4">
                     <h4>Subdealer Profile</h4>
                     <hr />
                     <div style={{ fontSize: '20px' }}>
