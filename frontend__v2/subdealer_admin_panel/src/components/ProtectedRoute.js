@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Redirect, Route, useHistory } from 'react-router-dom'
-import { toast } from 'react-toastify';
 import { loginContext } from '../contexts/LoginContext'
 import { orderContext } from '../contexts/OrderContext';
 import { getDeliveralbleOrders } from '../helpers/BackendCartHelper';

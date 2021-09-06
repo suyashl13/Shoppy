@@ -16,6 +16,7 @@ import { ToastContainer } from 'react-toastify';
 import { orderContext } from './contexts/OrderContext';
 import { profileContext } from './contexts/ProfileContext';
 import OrderSlugPage from './pages/order/OrderSlugPage';
+import SubdealerProductsPage from './pages/products/SubdealerProductsPage';
 
 
 function App() {
@@ -53,6 +54,7 @@ function App() {
               <Route exact path='/login' component={LoginPage} />
               <Route exact path='/register' component={RegisterSubdealerPage} />
               <ProtectedRoute exact path='/profile' component={ProfilePage} />
+              <ProtectedRoute exact path='/products' component={SubdealerProductsPage} />
             </Switch>
           </BrowserRouter>
         </profileContext.Provider>

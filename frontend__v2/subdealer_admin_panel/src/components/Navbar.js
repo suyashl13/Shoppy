@@ -26,6 +26,9 @@ export default function Navbar() {
                                     <Link to='/orders' className='nav-link'>All Orders</Link>
                                 </li>
                                 <li className="nav-item">
+                                    <Link to='/products' className='nav-link'>Products</Link>
+                                </li>
+                                <li className="nav-item">
                                     <Link to='/login' onClick={
                                         e => {
                                             logoutAtBackend({

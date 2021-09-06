@@ -6,8 +6,6 @@ export default function AllOrdersPage() {
 
     const { orders } = useContext(orderContext);
 
-    console.log(orders);
-
     return (
         <div className='container'>
             <div className='m-5'>
