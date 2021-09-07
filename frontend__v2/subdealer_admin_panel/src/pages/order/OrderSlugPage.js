@@ -1,5 +1,7 @@
 import React, { useContext } from 'react'
 import { Redirect, useParams } from 'react-router-dom'
+import CourierDelivery from '../../components/orderslug_components/CourierDelivery';
+import StaffDelivery from '../../components/orderslug_components/StaffDelivery';
 import { orderContext } from '../../contexts/OrderContext';
 import { tConvert } from '../../helpers/DateTimeHelper'
 
@@ -64,12 +66,31 @@ export default function OrderSlugPage(props) {
                                         <td>{orders[id]?.is_verified ? 'Yes' : 'No'}</td>
                                     </tr>
                                     <tr>
+                                        <td>Assigned to</td>
+                                        <td>
+                                            {
+                                                orders[id]?.assigned_to ?
+                                                    `${orders[id]?.assigned_to?.name} ${orders[id]?.assigned_to?.phone}`
+                                                    : "No Assigned yet"
+                                            } </td>
+                                    </tr>
+                                    <tr>
                                         <td>Ordered Date-Time</td>
                                         <td>{tConvert(orders[id]?.date_time_created.split('+')[0].split('T')[1].split('.')[0])} ({tConvert(orders[id]?.date_time_created.split('+')[0].split('T')[0])})</td>
-
                                     </tr>
                                 </tbody>
                             </table>
+                            <br />
+                            {
+                                orders[id]?.assigned_to ? null : <div className="row">
+                                    <div className="col-6">
+                                        <StaffDelivery cartId={orders[id]?.id} />
+                                    </div>
+                                    <div className="col-6">
+                                        <CourierDelivery cartId={orders[id]?.id} />
+                                    </div>
+                                </div> 
+                            }
                             <br />
                             <h4 className='mb-3'>Cart Items</h4>
                             <ul className="list-group">
@@ -77,17 +98,13 @@ export default function OrderSlugPage(props) {
                                     orders[id]?.cart_items.map((e, i) => <li key={i} className="list-group-item d-flex justify-content-between align-items-center">
                                         <div>
                                             <span style={{ fontSize: '18px' }}>{e.product.title} ({e.product.category}) </span> <br />
-                                            <div style={{
-                                                color: 'gray',
-                                                marginTop: '4px'
-                                            }}>
+                                            <div style={{ color: 'gray', marginTop: '4px' }}>
                                                 Amount : {e.amount} <br />
                                                 Quantity : {e.quantity}
                                             </div>
                                         </div>
                                         <span className="badge bg-success">₹ {e.amount}</span>
-                                    </li>
-                                    )
+                                    </li>)
                                 }
                             </ul>
                         </div>

@@ -7,6 +7,7 @@ import { tConvert } from '../../helpers/DateTimeHelper'
 export default function ProfilePage() {
 
     const { profile } = useContext(profileContext)
+
     return (
         <div className='container'>
             <div className="row justify-content-center mt-5">
@@ -15,7 +16,7 @@ export default function ProfilePage() {
                         Your subdealer profile has been deactivated by admin please contact authorities.
                     </div>
                     : null}
-                <div className="col col-sm-12 col-lg-4 col-md-6 mb-4">
+                <div className="col col-lg-4 col-md-12 mb-4 col-sm-12">
                     <small style={{ color: 'lightsteelblue' }}>Ref. Code</small>
                     <h3>{profile?.subdealer.subdealer_code}</h3>
                     <p className='mt-3' style={{ color: 'gray' }}>Delivering orders at : </p>
@@ -23,7 +24,7 @@ export default function ProfilePage() {
                         {profile?.subdealer.pincodes.split(',').map((v, i) => <li key={i} className='list-group-item'>{v}</li>)}
                     </ul>
                 </div>
-                <div className="col col-sm-12 col-lg-8 col-md-6 mb-4">
+                <div className="col col-lg-8 col-md-12 mb-4 col-sm-12 ">
                     <h4>Subdealer Profile</h4>
                     <hr />
                     <div style={{ fontSize: '20px' }}>
@@ -42,16 +43,14 @@ export default function ProfilePage() {
                         }
                     </ul>
                     <br />
-                    {
-                        profile?.user.is_admin_subdealer ?
-                            <>
-                                <h4>Co-Subdealers</h4>
-                                <hr />
-                                <ul className="list-group">
-                                    {profile?.co_subdealers.map((v, i) => <AdminCoSubdealer co_subdealer={v} key={i} />)}
-                                </ul>
-                            </>
-                            : null
+                    {profile?.user.is_admin_subdealer ?
+                        <>
+                            <h4>Co-Subdealers</h4>
+                            <hr />
+                            <ul className="list-group">
+                                {profile?.co_subdealers.map((v, i) => <AdminCoSubdealer co_subdealer={v} key={i} />)}
+                            </ul>
+                        </> : null
                     }
                 </div>
             </div>

@@ -64,16 +64,18 @@ export default function ProtectedRoute({ component: Component, ...rest }) {
                 render={
                     () => {
 
-                        if (isLoading) {
-                            return <center className='m-5 pt-5'>
-                                <div className="spinner-border text-primary" role="status">
-                                </div><br /><span className="sr-only pt-4">Loading...</span>
-                            </center>
-                        } else if (isLoggedIn === true) {
-                            if (isActive === false) {
-                                return <ProfilePage />
+                        if (isLoggedIn === true) {
+                            if (isLoading) {
+                                return <center className='m-5 pt-5'>
+                                    <div className="spinner-border text-primary" role="status">
+                                    </div><br /><span className="sr-only pt-4">Loading...</span>
+                                </center>
+                            } else {
+                                if (isActive === false) {
+                                    return <ProfilePage />
+                                }
+                                return <Component />
                             }
-                            return <Component />
                         } else if (isLoggedIn === false) {
                             return <Redirect to='/login' />
                         }
