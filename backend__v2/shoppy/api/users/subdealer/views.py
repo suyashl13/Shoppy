@@ -71,6 +71,7 @@ def subdealer_route(request: WSGIRequest) -> JsonResponse:
                             temp_subdealer = Subdealer.objects.get(subdealer_code=request.POST['ref_code'])
                             if temp_subdealer.user.is_admin_subdealer:
                                 new_subdealer.added_by = temp_subdealer
+                                new_subdealer.is_active = False
                             else:
                                 return JsonResponse({'ERR': 'Refrence code does not belongs to admin subdealer.'},
                                                     status=400)
@@ -121,16 +122,16 @@ def subdealer_id_route(request: WSGIRequest, u_id: int) -> JsonResponse:
             staff = UserSerializers(CustomUser.objects.filter(reporting_to=usr, is_subdealer_staff=True),
                                     many=True).data
 
-            if usr.is_admin_subdealer:
-                co_subdealers = []
-                for co_subdealer in SubdealerSerializer(
-                        Subdealer.objects.filter(added_by=Subdealer.objects.get(user=usr)), many=True).data:
-                    co_subdealer['user'] = UserSerializers(CustomUser.objects.get(id=co_subdealer['user'])).data
-                    co_subdealers.append(co_subdealer)
+            if subdealer_profile['is_active']:
+                if usr.is_admin_subdealer:
+                    co_subdealers = []
+                    for co_subdealer in SubdealerSerializer(
+                            Subdealer.objects.filter(added_by=Subdealer.objects.get(user=usr)), many=True).data:
+                        co_subdealer['user'] = UserSerializers(CustomUser.objects.get(id=co_subdealer['user'])).data
+                        co_subdealers.append(co_subdealer)
+                else:
+                    co_subdealers = None
             else:
-                co_subdealers = None
-
-            if not subdealer_profile['is_active']:
                 co_subdealers = []
                 staff = []
 
@@ -144,8 +145,32 @@ def subdealer_id_route(request: WSGIRequest, u_id: int) -> JsonResponse:
             return JsonResponse({'ERR': 'Unauthorized'})
 
     elif request.method == 'PUT':
+
+        request_body = QueryDict(request.body).dict()
+
         try:
-            request_body = QueryDict(request.body).dict()
+            co_subdealer_usr = CustomUser.objects.get(id=u_id)
+            co_subdealer = Subdealer.objects.get(user=co_subdealer_usr)
+            if usr != co_subdealer:
+                if usr.is_admin_subdealer and (co_subdealer.added_by == Subdealer.objects.get(user=usr)):
+                    for key, val in request_body.items():
+                        if key == 'is_active':
+                            if val == 'true':
+                                setattr(co_subdealer, key, True)
+                            elif val == 'false':
+                                setattr(co_subdealer, key, False)
+                        else:
+                            setattr(co_subdealer, key, val)
+                    co_subdealer.save()
+                    res = SubdealerSerializer(co_subdealer).data
+                    res['user'] = UserSerializers(co_subdealer_usr).data
+                    return JsonResponse(res)
+                else:
+                    return JsonResponse({'ERR': 'Unauthorized.'}, status=status.HTTP_401_UNAUTHORIZED)
+        except Exception as e:
+            return JsonResponse({'ERR': str(e)}, status=400)
+
+        try:
             for param, value in request_body.items():
                 if param in ['name', 'email', 'password', 'phone', 'address', 'pincode']:
                     setattr(usr, param, value)
@@ -178,7 +203,7 @@ def subdealer_login_route(request: WSGIRequest) -> JsonResponse:
         try:
             usr = CustomUser.objects.get(phone=phone)
             if not usr.is_subdealer:
-                return JsonResponse({'ERR': 'Invalid login route'}, status=status.HTTP_401_UNAUTHORIZED)
+                return JsonResponse({'ERR': 'Unauthorized user.'}, status=status.HTTP_401_UNAUTHORIZED)
 
             # Perform user login
             login_response = perform_login(phone, password, request.META['HTTP_USER_AGENT'])

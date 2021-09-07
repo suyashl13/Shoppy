@@ -8,5 +8,5 @@ urlpatterns = [
 
     # Subdealer Routes
     path('subdealers/', subdealer_cart_route),
-    path('subdealers/<int:cart_id>/', subdealer_cart_route),
+    path('subdealers/<int:cart_id>/', subdealer_cart_id_route),
 ]

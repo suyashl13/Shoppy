@@ -8,7 +8,7 @@ class Cart(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
 
     is_delivered = models.BooleanField(default=False)
-    delivered_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, related_name='delivered_by', blank=True)
+    assigned_to = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, related_name='assigned_to', blank=True)
     is_verified = models.BooleanField(default=False)
 
     is_canceled = models.BooleanField(default=False)

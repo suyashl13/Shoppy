@@ -43,6 +43,10 @@ def subdealer_cart_route(request: WSGIRequest) -> JsonResponse:
                 cart = dict(cart)
                 if cart['user'] is not None:
                     cart['user'] = UserSerializers(CustomUser.objects.get(id=cart['user'])).data
+                    try:
+                        cart['assigned_to'] = UserSerializers(CustomUser.objects.get(id=cart['assigned_to'])).data
+                    except:
+                        pass
                     cart['cart_items'] = get_child_cart_items(cart['id'], request)
                     res.append(cart)
 
@@ -62,12 +66,13 @@ def subdealer_cart_id_route(request: WSGIRequest, cart_id: int) -> JsonResponse:
         @roles : [ Subdealer ]
         @access : PRIVATE
     """
+    print(cart_id)
     auth_result = AuthHelper(request=request).check_authentication()
     if auth_result['ERR']:
         return JsonResponse({'ERR': auth_result['MSG']}, status=400)
     usr = auth_result['user']
 
-    if not check_subdealer(usr):
+    if check_subdealer(usr):
         return JsonResponse({"ERR": 'subdealer deactivated'}, status=401)
 
     if request.method == 'PUT':
@@ -92,11 +97,24 @@ def subdealer_cart_id_route(request: WSGIRequest, cart_id: int) -> JsonResponse:
                             if (value == 'true' or value == 'True') else setattr(cart,
                                                                                  attribute,
                                                                                  False)
+                    if attribute == 'assigned_to':
+                        try:
+                            if cart.is_canceled or cart.is_delivered or cart.is_verified:
+                                return JsonResponse({'ERR': 'Unable to assign cancelled / delivered cart'}, status=401)
+                            assigned_user = CustomUser.objects.get(id=int(value))
+                            setattr(cart, attribute, assigned_user)
+                            cart.order_status = 'Dispatched'
+                        except:
+                            return JsonResponse({'ERR': 'assigned user is invalid.'})
                     else:
                         setattr(cart, attribute, value)
 
                 cart.save()
-                return JsonResponse(CartSerializer(cart).data, status=200)
+                res = CartSerializer(cart).data
+                res['user'] = UserSerializers(CustomUser.objects.get(id=res['user'])).data
+                res['assigned_to'] = UserSerializers(CustomUser.objects.get(id=res['assigned_to'])).data
+                res['cart_items'] = get_child_cart_items(cart.id, request)
+                return JsonResponse(res, status=200)
             except Exception as e:
                 return JsonResponse({'ERR': str(e)}, status=400)
 
