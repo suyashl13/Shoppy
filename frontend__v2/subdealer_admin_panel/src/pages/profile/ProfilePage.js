@@ -1,30 +1,12 @@
-import React, { useContext, useEffect } from 'react'
-import { toast } from 'react-toastify'
+import React, { useContext } from 'react'
 import AdminCoSubdealer from '../../components/profile_components/AdminCoSubdealer'
 import SubdealerStaff from '../../components/profile_components/SubdealerStaff'
 import { profileContext } from '../../contexts/ProfileContext'
-import { getSubdealerProfile } from '../../helpers/BackendProfileHelper'
 import { tConvert } from '../../helpers/DateTimeHelper'
 
 export default function ProfilePage() {
 
-    const { profile, setProfile } = useContext(profileContext)
-
-
-    useEffect(() => {
-        if (!profile) {
-            getSubdealerProfile({
-                onSuccess: (data) => {
-                    setProfile(data);
-                },
-                onError: (err) => {
-                    toast('Unable to load profile.', { type: 'error' })
-                }
-            })
-        }
-    }, [])
-
-
+    const { profile } = useContext(profileContext)
     return (
         <div className='container'>
             <div className="row justify-content-center mt-5">
@@ -52,24 +34,24 @@ export default function ProfilePage() {
                         Date Joined : {tConvert(profile?.user.date_time_created.split('+')[0].split('T')[1].split('.')[0])} ({tConvert(profile?.user.date_time_created.split('+')[0].split('T')[0])})
                     </div>
                     <br />
-                    <h4>Staff</h4> 
+                    <h4>Staff</h4>
                     <hr />
                     <ul className='list-group'>
                         {
-                            profile?.staff.map((v,i) => <SubdealerStaff key={i} staff={v} />)
+                            profile?.staff.map((v, i) => <SubdealerStaff key={i} staff={v} />)
                         }
                     </ul>
                     <br />
                     {
-                        profile?.user.is_admin_subdealer ? 
+                        profile?.user.is_admin_subdealer ?
                             <>
-                            <h4>Co-Subdealers</h4>
-                            <hr />
+                                <h4>Co-Subdealers</h4>
+                                <hr />
                                 <ul className="list-group">
-                                    {profile?.co_subdealers.map((v,i) => <AdminCoSubdealer co_subdealer={v} key={i} />)}
+                                    {profile?.co_subdealers.map((v, i) => <AdminCoSubdealer co_subdealer={v} key={i} />)}
                                 </ul>
                             </>
-                        : null
+                            : null
                     }
                 </div>
             </div>

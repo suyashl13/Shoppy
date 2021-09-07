@@ -82,7 +82,7 @@ export default function StaffSlugPage(props) {
                             disabled={isLoading}
                             className={isLoading ? 'btn btn-sm btn-secondary' : staff_profile?.is_active ? 'btn btn-sm btn-danger' : 'btn btn-sm btn-success'}
                             onClick={e => { updateStaffActivationStatus({is_active: !staff_profile?.is_active }) }}>{
-                                isLoading ? <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> :
+                                isLoading ? <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> :
                                     staff_profile?.is_active ? 'Deactivate' : 'Activate'}
                         </button></td>
                     </tr>

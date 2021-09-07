@@ -19,6 +19,7 @@ import OrderSlugPage from './pages/order/OrderSlugPage';
 import SubdealerProductsPage from './pages/products/SubdealerProductsPage';
 import StaffSlugPage from './pages/profile/StaffSlugPage';
 import CoSubdealerSlugPage from './pages/profile/CoSubdealerSlugPage';
+import ServerErrorPage from './pages/error/ServerErrorPage';
 
 
 function App() {
@@ -38,12 +39,14 @@ function App() {
 
 
   if (isLoggedIn === null) {
-    return <>Loading...</>
+    return <center className='m-5 pt-5'>
+      <div className="spinner-border text-primary" role="status">
+      </div><br /><span className="sr-only pt-4">Loading...</span>
+    </center>
   }
 
 
-  return (
-    <loginContext.Provider value={{ isLoggedIn, setisLoggedIn }}>
+  return <loginContext.Provider value={{ isLoggedIn, setisLoggedIn }}>
       <orderContext.Provider value={{ orders, setOrders }}>
         <profileContext.Provider value={{ profile, setProfile }}>
           <ToastContainer />
@@ -55,6 +58,7 @@ function App() {
               <ProtectedRoute exact path='/orders/:id' component={OrderSlugPage} />
               <Route exact path='/login' component={LoginPage} />
               <Route exact path='/register' component={RegisterSubdealerPage} />
+              <Route exact path='/error' component={ServerErrorPage} />
               <ProtectedRoute exact path='/profile' component={ProfilePage} />
               <ProtectedRoute exact path='/products' component={SubdealerProductsPage} />
               <ProtectedRoute exact path='/profile/staff/:id' component={StaffSlugPage} />
@@ -64,7 +68,6 @@ function App() {
         </profileContext.Provider>
       </orderContext.Provider>
     </loginContext.Provider>
-  );
 }
 
 export default App;

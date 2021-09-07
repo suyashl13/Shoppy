@@ -88,7 +88,7 @@ export default function CoSubdealerSlugPage() {
                             disabled={isLoading}
                             className={isLoading ? 'btn btn-sm btn-secondary' : co_subdealer?.is_active ? 'btn btn-sm btn-danger' : 'btn btn-sm btn-success'}
                             onClick={e => { updateSubdealerActivationStatus({is_active: !co_subdealer?.is_active }) }}>{
-                                isLoading ? <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> :
+                                isLoading ? <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> :
                                     co_subdealer?.is_active ? 'Deactivate' : 'Activate'}
                         </button>
                         </td>
