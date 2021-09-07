@@ -1,6 +1,10 @@
+import { stringify } from 'qs'
 import React, { useContext } from 'react'
 import { useParams } from 'react-router'
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { useState } from 'react/cjs/react.development'
+import { BASE_URL } from '../../Config'
 import { profileContext } from '../../contexts/ProfileContext'
 import { tConvert } from '../../helpers/DateTimeHelper'
 
@@ -9,6 +13,37 @@ export default function CoSubdealerSlugPage() {
     const { id } = useParams()
     const { profile, setProfile } = useContext(profileContext)
     const co_subdealer = profile?.co_subdealers.filter(ele => ele.id == id)[0];
+    const [isLoading, setIsLoading] = useState(false)
+
+    const updateSubdealerActivationStatus = async (coSubdealerStatus) => {
+        setIsLoading(true)
+        await fetch(`${BASE_URL}users/subdealers/${co_subdealer?.user.id}/`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': localStorage.getItem('jwt'),
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: stringify(coSubdealerStatus)
+        }).then(async (e) => {
+            const updatedSubdealer = await e.json()
+            console.log(updatedSubdealer)
+            if (e.status === 200) {
+                let updatedSubdealerArray = profile?.co_subdealers.map(
+                    (item) => { if (item.id == id) { return updatedSubdealer } else { return item } })
+                setProfile({ ...profile, co_subdealers: updatedSubdealerArray })
+                setIsLoading(false)
+            } else {
+                toast(updatedSubdealer.ERR, { type: 'error' })
+                setIsLoading(false)
+            }
+
+        })
+            .catch(err => {
+                toast('Unable to update staff status.', { type: 'error' })
+                console.log({ err })
+                setIsLoading(false)
+            })
+    }
 
 
     if (!co_subdealer) {
@@ -47,7 +82,16 @@ export default function CoSubdealerSlugPage() {
                     </tr>
                     <tr>
                         <th scope="col">Activation </th>
-                        <td className={co_subdealer.is_active ? 'text-success' : 'text-danger'}>{co_subdealer.is_active ? 'Activated' : 'Disabled'}</td>
+                        <td className={co_subdealer.is_active ? 'text-success d-flex justify-content-between' : 'text-danger d-flex justify-content-between'}>{co_subdealer.is_active ? 'Activated' : 'Disabled'}
+                        
+                        <button
+                            disabled={isLoading}
+                            className={isLoading ? 'btn btn-sm btn-secondary' : co_subdealer?.is_active ? 'btn btn-sm btn-danger' : 'btn btn-sm btn-success'}
+                            onClick={e => { updateSubdealerActivationStatus({is_active: !co_subdealer?.is_active }) }}>{
+                                isLoading ? <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> :
+                                    co_subdealer?.is_active ? 'Deactivate' : 'Activate'}
+                        </button>
+                        </td>
                     </tr>
                 </tbody>
             </table>

@@ -19,7 +19,7 @@ export default function StaffSlugPage(props) {
     }
 
 
-    const updateStaffActivationStatus = async (isActive) => {
+    const updateStaffActivationStatus = async (staffStatus) => {
         setIsLoading(true)
         await fetch(`${BASE_URL}users/subdealers/staff/${id}/`, {
             method: 'PUT',
@@ -27,7 +27,7 @@ export default function StaffSlugPage(props) {
                 'Authorization': localStorage.getItem('jwt'),
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: stringify({ 'is_active': isActive.toString() })
+            body: stringify(staffStatus)
         }).then(async (e) => {
             const updatedStaff = await e.json()
             if (e.status === 200) {
@@ -81,7 +81,7 @@ export default function StaffSlugPage(props) {
                         <td className='d-flex justify-content-between'><center>{staff_profile?.is_active ? 'Active' : 'Deactivated'}</center> <button
                             disabled={isLoading}
                             className={isLoading ? 'btn btn-sm btn-secondary' : staff_profile?.is_active ? 'btn btn-sm btn-danger' : 'btn btn-sm btn-success'}
-                            onClick={e => { updateStaffActivationStatus(!staff_profile?.is_active) }}>{
+                            onClick={e => { updateStaffActivationStatus({is_active: !staff_profile?.is_active }) }}>{
                                 isLoading ? <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> :
                                     staff_profile?.is_active ? 'Deactivate' : 'Activate'}
                         </button></td>

@@ -52,7 +52,7 @@ export default function ProfilePage() {
                         Date Joined : {tConvert(profile?.user.date_time_created.split('+')[0].split('T')[1].split('.')[0])} ({tConvert(profile?.user.date_time_created.split('+')[0].split('T')[0])})
                     </div>
                     <br />
-                    <h4>Staff</h4>
+                    <h4>Staff</h4> 
                     <hr />
                     <ul className='list-group'>
                         {
