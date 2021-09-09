@@ -13,8 +13,8 @@ class Cart(models.Model):
 
     is_canceled = models.BooleanField(default=False)
 
-    date_time_created = models.DateTimeField(auto_now=True)
-    date_time_updated = models.DateTimeField(auto_now_add=True)
+    date_time_created = models.DateTimeField(auto_now_add=True)
+    date_time_updated = models.DateTimeField(auto_now=True)
 
     payment_method = models.CharField(max_length=12, null=True, blank=True)
     subtotal = models.FloatField(default=0)
@@ -41,7 +41,7 @@ class CartItem(models.Model):
 
     amount = models.FloatField()
 
-    date_time_created = models.DateTimeField(auto_now=True)
-    date_time_updated = models.DateTimeField(auto_now_add=True)
+    date_time_created = models.DateTimeField(auto_now_add=True)
+    date_time_updated = models.DateTimeField(auto_now=True)
 
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)

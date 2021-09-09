@@ -23,8 +23,8 @@ class CustomUser(AbstractUser):
     pincode = models.CharField(max_length=6)
     is_active = models.BooleanField(default=True)
 
-    date_time_created = models.DateTimeField(auto_now=True)
-    date_time_updated = models.DateTimeField(auto_now_add=True)
+    date_time_created = models.DateTimeField(auto_now_add=True)
+    date_time_updated = models.DateTimeField(auto_now=True)
 
     reporting_to = models.ForeignKey('self', on_delete=models.CASCADE, related_name='c_user', blank=True, null=True)
 
@@ -40,8 +40,8 @@ class Subdealer(models.Model):
     is_active = models.BooleanField(default=True)
     pincodes = models.CharField(max_length=120)
 
-    date_time_created = models.DateTimeField(auto_now=True)
-    date_time_updated = models.DateTimeField(auto_now_add=True)
+    date_time_created = models.DateTimeField(auto_now_add=True)
+    date_time_updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'#{self.id} {self.user.name}'
@@ -53,5 +53,5 @@ class Session(models.Model):
     token = models.CharField(max_length=16)
     device = models.CharField(max_length=60)
 
-    datetime_created = models.DateTimeField(auto_now=True)
-    datetime_updated = models.DateTimeField(auto_now_add=True)
+    date_time_created = models.DateTimeField(auto_now_add=True)
+    date_time_updated = models.DateTimeField(auto_now=True)

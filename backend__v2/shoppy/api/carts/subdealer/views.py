@@ -100,7 +100,7 @@ def subdealer_cart_id_route(request: WSGIRequest, cart_id: int) -> JsonResponse:
                     if attribute == 'assigned_to':
                         try:
                             if cart.is_canceled or cart.is_delivered or cart.is_verified:
-                                return JsonResponse({'ERR': 'Unable to assign cancelled / delivered cart'}, status=401)
+                                return JsonResponse({'ERR': 'Unable to assign cancelled / delivered cart.'}, status=401)
                             assigned_user = CustomUser.objects.get(id=int(value))
                             setattr(cart, attribute, assigned_user)
                             cart.order_status = 'Dispatched'

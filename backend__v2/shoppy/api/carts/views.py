@@ -127,6 +127,9 @@ def cart_id_route(request: WSGIRequest, cart_id: int) -> JsonResponse:
                         # Validations
                         # TODO: 4Hr validation
 
+                        if cart.assigned_to is not None:
+                            return JsonResponse({'ERR': 'Cart already dispatched.'}, status=401)
+
                         cart.is_canceled = get_absolute_boolean(value)
                         cart.order_status = 'Canceled'
 
@@ -140,7 +143,6 @@ def cart_id_route(request: WSGIRequest, cart_id: int) -> JsonResponse:
                             inv_product.save()
 
                     elif attribute == 'is_verified':
-
                         if not cart.is_delivered:
                             return JsonResponse({'ERR': 'Verification can be done only after delivery.'}, status=400)
 
