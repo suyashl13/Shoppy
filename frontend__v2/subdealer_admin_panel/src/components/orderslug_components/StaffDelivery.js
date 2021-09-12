@@ -10,11 +10,7 @@ export default function StaffDelivery(props) {
 
     const { orders, setOrders } = useContext(orderContext)
     const staff_users = profile?.staff.map((staff, index) => {
-        return {
-            id: staff.id,
-            name: staff.name,
-            phone: staff.phone,
-        }
+        return { id: staff.id, name: staff.name, phone: staff.phone }
     });
 
 
@@ -32,8 +28,12 @@ export default function StaffDelivery(props) {
                 });
                 setOrders(updatedOrders)
             },
-            onError: (err) => {
-                toast('Unable to assign an order to staff.', { type: 'error' })
+            onError: ({ err }) => {
+                if (err.response.data.ERR) {
+                    toast(err.response.data.ERR, { type: 'error' })
+                } else { 
+                    toast('Unable to assign an order to staff.', { type: 'error' })
+                }
             }
         })
     }

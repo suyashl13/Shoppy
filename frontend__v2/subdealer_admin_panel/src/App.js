@@ -37,7 +37,6 @@ function App() {
   }, [])
 
 
-
   if (isLoggedIn === null) {
     return <center className='m-5 pt-5'>
       <div className="spinner-border text-primary" role="status">

@@ -66,7 +66,7 @@ def subdealer_cart_id_route(request: WSGIRequest, cart_id: int) -> JsonResponse:
         @roles : [ Subdealer ]
         @access : PRIVATE
     """
-    print(cart_id)
+
     auth_result = AuthHelper(request=request).check_authentication()
     if auth_result['ERR']:
         return JsonResponse({'ERR': auth_result['MSG']}, status=400)

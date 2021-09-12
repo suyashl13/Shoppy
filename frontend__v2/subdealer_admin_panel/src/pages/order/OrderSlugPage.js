@@ -78,15 +78,19 @@ export default function OrderSlugPage(props) {
                                         <td>Ordered Date-Time</td>
                                         <td>{tConvert(orders[id]?.date_time_created.split('+')[0].split('T')[1].split('.')[0])} ({tConvert(orders[id]?.date_time_created.split('+')[0].split('T')[0])})</td>
                                     </tr>
+                                    <tr>
+                                        <td>Updated Cart Date-Time</td>
+                                        <td>{tConvert(orders[id]?.date_time_updated.split('+')[0].split('T')[1].split('.')[0])} ({tConvert(orders[id]?.date_time_created.split('+')[0].split('T')[0])})</td>
+                                    </tr>
                                 </tbody>
                             </table>
                             <br />
                             {
-                                orders[id]?.assigned_to ? null : <div className="row">
-                                    <div className="col-6">
+                                orders[id]?.is_canceled ? null : <div className="row">
+                                    <div className="col col-lg-6 col-sm-12">
                                         <StaffDelivery cartId={orders[id]?.id} />
                                     </div>
-                                    <div className="col-6">
+                                    <div className="col col-lg-6 col-sm-12">
                                         <CourierDelivery cartId={orders[id]?.id} />
                                     </div>
                                 </div> 
