@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:staff_app/AuthWrapper.dart';
+import 'package:staff_app/components/SheetComponent.dart';
 import 'package:staff_app/contexts/OrderContext.dart';
 import 'package:staff_app/contexts/ProfileContext.dart';
 import 'package:staff_app/screens/home/HomePage.dart';
@@ -10,7 +11,9 @@ void main() {
     providers: [
       ChangeNotifierProvider(create: (_) => OrderContext()),
       ChangeNotifierProvider(create: (_) => ProfileContext()),
-      Provider(create: (_) => HomePage())
+
+      Provider(create: (_) => HomePage()),
+      Provider(create: (_) => SheetComponent({}),)
     ],
     child: MyApp(),
   ));

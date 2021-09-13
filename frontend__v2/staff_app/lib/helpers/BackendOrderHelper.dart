@@ -9,7 +9,8 @@ class BackendOrderHelper {
   final BASE_URL = Env().BASE_URL;
   late SharedPreferences _preferences;
 
-  Future getDeliverableCartsFromBackend({required onSuccess(data), required onError(err)}) async {
+  Future getDeliverableCartsFromBackend(
+      {required onSuccess(data), required onError(err)}) async {
     _preferences = await SharedPreferences.getInstance();
 
     try {
@@ -23,28 +24,39 @@ class BackendOrderHelper {
         }
       }).catchError((err) {
         throw err;
-      });
+      }).timeout(Duration(seconds: 20));
     } catch (e) {
       onError(e.toString());
     }
   }
 
   Future updateCartAtBackend(
-      {required int cartId, required Map cartUpdate}) async {
+      {required int cartId,
+      required Map cartUpdate,
+      required onSuccess(success),
+      required onError(error)}) async {
     _preferences = await SharedPreferences.getInstance();
 
-    await http
-        .put(Uri.parse(BASE_URL + 'carts/staff/$cartId/'),
-            headers: {
-              "Authorization": _preferences.get('jwt').toString(),
-              "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: cartUpdate,
-            encoding: Encoding.getByName('utf-8'))
-        .then((res) {
-      print(res.body);
-    }).catchError((err) {
-      print(err);
-    });
+    try {
+      await http
+          .put(Uri.parse(BASE_URL + 'carts/staff/$cartId/'),
+              headers: {
+                "Authorization": _preferences.get('jwt').toString(),
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              body: cartUpdate,
+              encoding: Encoding.getByName('utf-8'))
+          .then((res) {
+        if (res.statusCode == 200) {
+          onSuccess(jsonDecode(res.body));
+        } else {
+          throw jsonDecode(res.body)['ERR'];
+        }
+      }).catchError((err) {
+        throw err;
+      });
+    } catch (e) {
+      onError(e);
+    }
   }
 }
