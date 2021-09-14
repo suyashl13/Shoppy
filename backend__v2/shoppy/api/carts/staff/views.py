@@ -7,8 +7,10 @@ from ..helper import get_child_cart_items
 from ...users.models import CustomUser
 from ...users.serializer import UserSerializers
 from django.http import QueryDict
+from django.views.decorators.csrf import csrf_exempt
 
 
+@csrf_exempt
 def staff_cart_route(request: WSGIRequest):
     auth_result = AuthHelper(request=request).check_authentication()
     if auth_result['ERR']:
@@ -39,6 +41,7 @@ def staff_cart_route(request: WSGIRequest):
         return JsonResponse({'ERR': 'Invalid HTTP Request.'})
 
 
+@csrf_exempt
 def staff_cart_id_route(request: WSGIRequest, cart_id: int):
     auth_result = AuthHelper(request=request).check_authentication()
     if auth_result['ERR']:
@@ -59,6 +62,13 @@ def staff_cart_id_route(request: WSGIRequest, cart_id: int):
             cart = Cart.objects.get(id=cart_id)
 
             for attr, val in request_body.items():
+                if attr == 'is_delivered':
+                    if val == 'true':
+                        val = True
+                        cart.order_status = "Pending Verification"
+                    else:
+                        val = False
+
                 setattr(cart, attr, val)
 
             cart.save()

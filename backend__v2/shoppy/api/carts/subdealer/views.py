@@ -81,12 +81,12 @@ def subdealer_cart_id_route(request: WSGIRequest, cart_id: int) -> JsonResponse:
                 request_body = QueryDict(request.body).dict()
                 cart = Cart.objects.get(id=cart_id)
 
-                # Check weather subdealer is delevering product in assigned pincode
+                # Check weather subdealer is delivering product in assigned pin_code
                 try:
                     subdealer = Subdealer.objects.get(user=usr)
                     if not str(cart.pin_code).strip() in [str(subd_pincode).strip() for subd_pincode in
                                                           str(subdealer.pincodes).split(',')]:
-                        return JsonResponse({'ERR': 'Cant deliver product in this pincode'})
+                        return JsonResponse({'ERR': 'Cant deliver product at this pincode'})
 
                 except Exception as e:
                     return JsonResponse({'ERR': str(e)}, status=400)

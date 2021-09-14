@@ -1,4 +1,5 @@
 from django.db import models
+from ..users.models import Subdealer
 
 
 # Create your models here.
@@ -28,6 +29,7 @@ class Product(models.Model):
     product_image = models.FileField(upload_to='product/', blank=False, null=False)
 
     vendor_name = models.CharField(max_length=50)
+    addedby_subdealer = models.ForeignKey(Subdealer, on_delete=models.SET_NULL, null=True, blank=True, default=None)
 
     available_stock = models.PositiveIntegerField()
     is_active = models.BooleanField()

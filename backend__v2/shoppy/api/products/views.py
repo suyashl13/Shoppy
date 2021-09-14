@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 @csrf_exempt
-def produt_route(request: WSGIRequest):
+def product_route(request: WSGIRequest):
     """
         @route : /products/
         @description : A route to get and upload products.
