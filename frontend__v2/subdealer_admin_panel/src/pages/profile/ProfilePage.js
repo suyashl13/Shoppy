@@ -16,7 +16,7 @@ export default function ProfilePage() {
                         Your subdealer profile has been deactivated by admin please contact authorities.
                     </div>
                     : null}
-                <div className="col col-lg-4 col-md-12 mb-4 col-sm-12">
+                <div className="col-lg-4 col-md-12 mb-4 col-sm-12">
                     <small style={{ color: 'lightsteelblue' }}>Ref. Code</small>
                     <h3>{profile?.subdealer.subdealer_code}</h3>
                     <p className='mt-3' style={{ color: 'gray' }}>Delivering orders at : </p>
@@ -24,7 +24,7 @@ export default function ProfilePage() {
                         {profile?.subdealer.pincodes.split(',').map((v, i) => <li key={i} className='list-group-item'>{v}</li>)}
                     </ul>
                 </div>
-                <div className="col col-lg-8 col-md-12 mb-4 col-sm-12 ">
+                <div className="col-lg-8 col-md-12 mb-4 col-sm-12 ">
                     <h4>Subdealer Profile</h4>
                     <hr />
                     <div style={{ fontSize: '20px' }}>

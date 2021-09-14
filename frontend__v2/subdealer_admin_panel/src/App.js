@@ -20,6 +20,8 @@ import SubdealerProductsPage from './pages/products/SubdealerProductsPage';
 import StaffSlugPage from './pages/profile/StaffSlugPage';
 import CoSubdealerSlugPage from './pages/profile/CoSubdealerSlugPage';
 import ServerErrorPage from './pages/error/ServerErrorPage';
+import ProductSlugPage from './pages/products/ProductSlugPage';
+import { productContext } from './contexts/ProductContext';
 
 
 function App() {
@@ -27,6 +29,7 @@ function App() {
   const [isLoggedIn, setisLoggedIn] = useState(null)
   const [orders, setOrders] = useState(null)
   const [profile, setProfile] = useState(null)
+  const [product, setProduct] = useState(null)
 
   useEffect(() => {
     const checkBackend = async () => {
@@ -46,8 +49,9 @@ function App() {
 
 
   return <loginContext.Provider value={{ isLoggedIn, setisLoggedIn }}>
-      <orderContext.Provider value={{ orders, setOrders }}>
-        <profileContext.Provider value={{ profile, setProfile }}>
+    <orderContext.Provider value={{ orders, setOrders }}>
+      <profileContext.Provider value={{ profile, setProfile }}>
+        <productContext.Provider value={{ product, setProduct }}>
           <ToastContainer />
           <BrowserRouter>
             <Navbar />
@@ -58,15 +62,19 @@ function App() {
               <Route exact path='/login' component={LoginPage} />
               <Route exact path='/register' component={RegisterSubdealerPage} />
               <Route exact path='/error' component={ServerErrorPage} />
+              
+              {/* Private Routes */}
               <ProtectedRoute exact path='/profile' component={ProfilePage} />
               <ProtectedRoute exact path='/products' component={SubdealerProductsPage} />
+              <ProtectedRoute exact path='/products/:id' component={ProductSlugPage} />
               <ProtectedRoute exact path='/profile/staff/:id' component={StaffSlugPage} />
               <ProtectedRoute exact path='/profile/co_subdealer/:id' component={CoSubdealerSlugPage} />
             </Switch>
           </BrowserRouter>
-        </profileContext.Provider>
-      </orderContext.Provider>
-    </loginContext.Provider>
+        </productContext.Provider>
+      </profileContext.Provider>
+    </orderContext.Provider>
+  </loginContext.Provider>
 }
 
 export default App;

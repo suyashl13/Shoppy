@@ -66,6 +66,10 @@ export default function OrderSlugPage(props) {
                                         <td>{orders[id]?.is_verified ? 'Yes' : 'No'}</td>
                                     </tr>
                                     <tr>
+                                        <td>Mode of Payment</td>
+                                        <td>{orders[id]?.payment_method}</td>
+                                    </tr>
+                                    <tr>
                                         <td>Assigned to</td>
                                         <td>
                                             {
@@ -87,10 +91,10 @@ export default function OrderSlugPage(props) {
                             <br />
                             {
                                 orders[id]?.is_canceled ? null : <div className="row">
-                                    <div className="col col-lg-6 col-sm-12">
+                                    <div className="col-lg-6 col-sm-12">
                                         <StaffDelivery cartId={orders[id]?.id} />
                                     </div>
-                                    <div className="col col-lg-6 col-sm-12">
+                                    <div className="col-lg-6 col-sm-12">
                                         <CourierDelivery cartId={orders[id]?.id} />
                                     </div>
                                 </div> 
