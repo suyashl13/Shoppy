@@ -19,7 +19,7 @@ export default function OrderSlugPage(props) {
         <div className='container mt-5'>
             <div className="row justify-content-center">
                 <div className="col-sm-12 col-md-10 col-lg-10">
-                    <div className="card">
+                    <div className="card mb-4">
                         <div className="card-header">
                             <h3>#{orders[id]?.id} Order Details</h3>
                         </div>

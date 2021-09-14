@@ -22,6 +22,8 @@ import CoSubdealerSlugPage from './pages/profile/CoSubdealerSlugPage';
 import ServerErrorPage from './pages/error/ServerErrorPage';
 import ProductSlugPage from './pages/products/ProductSlugPage';
 import { productContext } from './contexts/ProductContext';
+import PageNotFound from './pages/error/PageNotFound';
+import AddProductPage from './pages/products/AddProductPage';
 
 
 function App() {
@@ -55,20 +57,23 @@ function App() {
           <ToastContainer />
           <BrowserRouter>
             <Navbar />
-            <Switch>
-              <ProtectedRoute exact path='/' component={HomePage} />
-              <ProtectedRoute exact path='/orders' component={AllOrdersPage} />
-              <ProtectedRoute exact path='/orders/:id' component={OrderSlugPage} />
+            <Switch>              
               <Route exact path='/login' component={LoginPage} />
               <Route exact path='/register' component={RegisterSubdealerPage} />
               <Route exact path='/error' component={ServerErrorPage} />
               
               {/* Private Routes */}
+              <ProtectedRoute exact path='/' component={HomePage} />
+              <ProtectedRoute exact path='/orders' component={AllOrdersPage} />
+              <ProtectedRoute exact path='/orders/:id' component={OrderSlugPage} />
               <ProtectedRoute exact path='/profile' component={ProfilePage} />
               <ProtectedRoute exact path='/products' component={SubdealerProductsPage} />
               <ProtectedRoute exact path='/products/:id' component={ProductSlugPage} />
+              <ProtectedRoute exact path='/products/new/add' component={AddProductPage}/>
               <ProtectedRoute exact path='/profile/staff/:id' component={StaffSlugPage} />
               <ProtectedRoute exact path='/profile/co_subdealer/:id' component={CoSubdealerSlugPage} />
+
+              <Route component={PageNotFound}/>
             </Switch>
           </BrowserRouter>
         </productContext.Provider>

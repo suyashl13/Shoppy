@@ -68,6 +68,9 @@ export default function SubdealerProductsPage() {
                             </li>)
                         }
                     </ul>
+                        <center>
+                            <Link className='nav-link active mt-3' to='/products/new/add'>Add New Product</Link>
+                        </center>
                 </div>
             </div>
         </div>
