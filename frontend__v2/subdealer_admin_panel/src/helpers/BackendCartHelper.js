@@ -28,7 +28,28 @@ export const assignDeliveryToStaffAtBackend = async (cartId, updatedOrder, { onS
     }).then(e => {
         onSuccess(e.data)
     })
-    .catch(err => { 
+        .catch(err => {
+            onError({ err })
+        })
+}
+
+export const assignDeliveryToCourierAtBackend = async (cartId, orderData, { onSuccess, onError }) => {
+    
+    const formData = new FormData();
+    Object.keys(orderData).map(element => {
+        formData.append(element, orderData[element]);
+    });
+
+    await axios({
+        url: `${BASE_URL}carts/subdealers/courier_delivery/${cartId}/`,
+        method: "POST",
+        headers: { 'Authorization': localStorage.getItem('jwt'), },
+        data: formData
+    }).then(res=>{
+        if (res.status == 200) {
+            onSuccess(res.data)
+        }
+    }).catch(err=> {
         onError({err})
     })
 }

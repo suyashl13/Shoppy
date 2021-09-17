@@ -42,3 +42,7 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title + ' (' + str(self.id) + ')'
+
+    def save(self, *args, **kwargs):
+        self.price = (float(self.tax_percentage) / 100 * float(self.base_price)) - (float(self.discount) / 100 * float(self.base_price))
+        super(Product, self).save(*args, **kwargs)

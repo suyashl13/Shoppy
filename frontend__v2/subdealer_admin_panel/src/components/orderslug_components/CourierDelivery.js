@@ -1,9 +1,42 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { assignDeliveryToCourierAtBackend } from '../../helpers/BackendCartHelper'
 
-export default function CourierDelivery() {
+export default function CourierDelivery(props) {
+
+    const [courierData, setCourierData] = useState({
+        courier_name: '',
+        courier_tracking_id: '',
+    })
+
+
+
+
+    const assignToCourier = async (orderData) => {
+        await assignDeliveryToCourierAtBackend(props?.cartId, orderData, {
+            onSuccess: (res) => {
+                console.log(res)
+            }, onError: (err) => {
+                console.error({ err });
+            }
+        });
+    }
+
+
     return (
-        <div>
-            Coureer Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tempore sapiente mollitia aliquid voluptatum quasi vitae similique rerum eveniet dolorem reprehenderit. Quos, sint sequi. Quos impedit provident error in, magni nam.
+        <div className='card'>
+            <div className="card-header bg-primary text-light">
+                Assign Delivery to Courier Service
+            </div>
+            <div className="card-body">
+                <form onSubmit={async (e) => {
+                    e.preventDefault();
+                    await assignToCourier(courierData);
+                }}>
+                    <input type="text" value={courierData.courier_name} onChange={e=>{setCourierData({...courierData, courier_name: e.target.value})}} placeholder='Courier Service Name' id="" className="form-control mb-2" />
+                    <input type="text" value={courierData.courier_tracking_id} onChange={e=>{setCourierData({...setCourierData, courier_tracking_id: e.target.value})}} placeholder='Tracking ID' id="" className="form-control mb-2" />
+                    <button type="submit" className="btn btn-primary btn-sm">Submit</button>
+                </form>
+            </div>
         </div>
     )
 }

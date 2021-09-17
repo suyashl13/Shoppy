@@ -8,7 +8,8 @@ class Cart(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
 
     is_delivered = models.BooleanField(default=False)
-    assigned_to = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, related_name='assigned_to', blank=True)
+    assigned_to = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, related_name='assigned_to',
+                                    blank=True)
     is_verified = models.BooleanField(default=False)
 
     is_canceled = models.BooleanField(default=False)
@@ -32,7 +33,7 @@ class Cart(models.Model):
 class CourierDelivery(models.Model):
     courier_name = models.CharField(max_length=50)
     courier_tracking_id = models.CharField(max_length=50)
-    cart = models.ForeignKey(Cart, on_delete=models.SET_NULL, null=True)
+    cart = models.OneToOneField(Cart, on_delete=models.SET_NULL, null=True)
 
 
 class CartItem(models.Model):

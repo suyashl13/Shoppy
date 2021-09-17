@@ -11,9 +11,8 @@ export default function OrderSlugPage(props) {
     const { orders } = useContext(orderContext)
 
 
-    if (!orders) {
-        return <Redirect to={{ pathname: '/' }} />
-    }
+    if (!orders) { return <Redirect to={{ pathname: '/' }} /> }
+
 
     return (
         <div className='container mt-5'>
@@ -97,7 +96,7 @@ export default function OrderSlugPage(props) {
                                     <div className="col-lg-6 col-sm-12">
                                         <CourierDelivery cartId={orders[id]?.id} />
                                     </div>
-                                </div> 
+                                </div>
                             }
                             <br />
                             <h4 className='mb-3'>Cart Items</h4>

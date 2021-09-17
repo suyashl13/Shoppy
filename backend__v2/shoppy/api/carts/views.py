@@ -66,6 +66,7 @@ def cart_route(request: WSGIRequest) -> JsonResponse:
 
                 return JsonResponse(res, safe=False, status=200)
             except Exception as e:
+                print(e)
                 return JsonResponse({'ERR': str(e)}, status=500)
         else:
             return JsonResponse({'ERR': 'Unauthorized'}, status=401)

@@ -24,7 +24,7 @@ def products_subdealers_route(request: WSGIRequest) -> JsonResponse:
             return JsonResponse(
                 {'products': ProductSerializer(subdealer_products, many=True, context={'request': request}).data,
                  'categories': CategorySerializer(Category.objects.filter(is_active=True),
-                                                                  many=True).data
+                                                  many=True).data
                  },
                 safe=False)
         except Exception as e:
@@ -35,12 +35,17 @@ def products_subdealers_route(request: WSGIRequest) -> JsonResponse:
             request_body = request.POST
             new_product = Product()
             for attr, val in request_body.items():
-                if attr in ["product_image", "title", "price", "unit", "description", "discount", "is_available",
-                            "vendor_name", "available_stock", "tax_percentage", "base_price", "category"]:
+                if attr in ["product_image", "title", "price", "unit", "description", "discount",
+                            "vendor_name", "available_stock", "tax_percentage", "base_price"]:
                     if attr in ["discount", "tax_percentage"]:
                         setattr(new_product, attr, float(val))
+                    if attr == 'category':
+                        new_product.category = Category.objects.get(id=val)
                     else:
+                        setattr(new_product, attr, True) if int(request_body['available_stock']) > 0 \
+                            else setattr(new_product, attr, False)
                         setattr(new_product, attr, val)
+            print(request.FILES)
 
             new_product.product_image = request.FILES['product_image']
             new_product.is_active = False
@@ -77,16 +82,18 @@ def products_subdealers_product_id_route(request: WSGIRequest, product_id: int) 
                     if int(value) < 0:
                         return JsonResponse({'ERR': 'Negative value not allowed.'}, status=400)
                     setattr(product, attr, int(value))
-                    if product.available_stock > 0:
+                    if product.available_stock == 0:
+                        product.is_available = False
+                    elif product.available_stock > 0:
                         product.is_available = True
                 elif attr == 'is_available':
                     if value == 'true':
                         product.is_available = True
-                    else:
+                    elif value == 'false':
                         product.is_available = False
 
             product.save()
-            return JsonResponse(ProductSerializer(product).data)
+            return JsonResponse(ProductSerializer(product, context={'request': request}).data)
         except Exception as e:
             return JsonResponse({'ERR': str(e)}, status=400)
 

@@ -12,10 +12,14 @@ def get_child_cart_items(cart_id, request: WSGIRequest) -> list:
     result = []
     for cart_item in cart_items:
         cart_itm = dict(CartItemSerializer(cart_item).data)
-        product_dict = ProductSerializer(Product.objects.get(pk=cart_itm['product']), context={'request': request}).data
-        product_dict['category'] = Category.objects.get(id=product_dict['category']).name
-        cart_itm['product'] = product_dict
-        result.append(cart_itm)
+        try:
+            product_dict = ProductSerializer(Product.objects.get(pk=cart_itm['product']),
+                                             context={'request': request}).data
+            product_dict['category'] = Category.objects.get(id=product_dict['category']).name
+            cart_itm['product'] = product_dict
+            result.append(cart_itm)
+        except:
+            pass
     return result
 
 
