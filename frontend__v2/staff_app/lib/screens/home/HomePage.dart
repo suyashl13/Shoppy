@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:staff_app/contexts/OrderContext.dart';
 import 'package:staff_app/helpers/BackendAuthHelper.dart';
 import 'package:staff_app/helpers/BackendOrderHelper.dart';
 import 'package:staff_app/screens/auth/AuthenticationPage.dart';
@@ -14,7 +16,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool isLoading = true;
-  List pendingOrders = [];
   bool isDeactivated = false;
   late SharedPreferences _preferences;
 
@@ -29,7 +30,7 @@ class _HomePageState extends State<HomePage> {
     await BackendOrderHelper().getDeliverableCartsFromBackend(
         onSuccess: (data) {
       setState(() {
-        pendingOrders = data;
+        Provider.of<OrderContext>(context, listen: false).setOrders(data);
       });
     }, onError: (err) {
       print(err);
@@ -130,41 +131,47 @@ class _HomePageState extends State<HomePage> {
                               child: Text(
                                   "Looks like your account is deactivated by higher authorities."),
                             )
-                          : ListView.builder(
-                              itemCount: pendingOrders.length,
-                              itemBuilder: (context, index) => ListTile(
-                                onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => OrderSlugPage(
-                                            pendingOrders[index]))),
-                                leading: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "#${pendingOrders[index]['id']}",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
+                          : Consumer<OrderContext>(
+                              builder: (context, orderContext, child) {
+                                final List pendingOrders = orderContext.getOrders();
+                                return ListView.builder(
+                                  itemCount: pendingOrders.length,
+                                  itemBuilder: (context, index) => ListTile(
+                                    onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) => OrderSlugPage(
+                                                pendingOrders[index]))),
+                                    leading: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "#${pendingOrders[index]['id']}",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    title: Text(
+                                        "${pendingOrders[index]['user']['name']} (${DateFormat.yMMMMd().format(DateTime.parse(pendingOrders[index]['date_time_created']))})"),
+                                    subtitle: Text(
+                                        "₹ ${pendingOrders[index]['subtotal']} " +
+                                            "(${pendingOrders[index]['cart_items'].length} Items)"),
+                                    trailing: Card(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(6)),
+                                      color: Colors.green,
+                                      child: Padding(
+                                          padding: EdgeInsets.all(4),
+                                          child: Icon(
+                                            Icons.arrow_forward_ios,
+                                            size: 18,
+                                            color: Colors.white,
+                                          )),
+                                    ),
                                   ),
-                                ),
-                                title: Text(
-                                    "${pendingOrders[index]['user']['name']} (${DateFormat.yMMMMd().format(DateTime.parse(pendingOrders[index]['date_time_created']))})"),
-                                subtitle: Text(
-                                    "₹ ${pendingOrders[index]['subtotal']} " +
-                                        "(${pendingOrders[index]['cart_items'].length} Items)"),
-                                trailing: Card(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(6)),
-                                  color: Colors.green,
-                                  child: Padding(
-                                      padding: EdgeInsets.all(4),
-                                      child: Icon(
-                                        Icons.arrow_forward_ios,
-                                        size: 18,
-                                        color: Colors.white,
-                                      )),
-                                ),
-                              ),
+                                );
+                              },
                             ),
                     ))
                   ],

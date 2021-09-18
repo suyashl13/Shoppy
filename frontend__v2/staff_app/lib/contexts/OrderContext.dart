@@ -12,12 +12,16 @@ class OrderContext with ChangeNotifier, DiagnosticableTreeMixin {
     notifyListeners();
   }
 
-  updateItem({required oldElement ,required updatedElement}) {
-    int indexToUpdate = _orders.indexOf(oldElement);
-    print(_orders[indexToUpdate]['payment_method']);
-    _orders[indexToUpdate] = updatedElement;
-    print(_orders[indexToUpdate]['payment_method']);
+  updateItem({required oldElement, required updatedElement}) {
+    List _updatedOrders = _orders.map((item) {
+      if (item['id'] == updatedElement['id']) {
+        return updatedElement;
+      } else {
+        return item;
+      }
+    }).toList();
+
+    _orders = _updatedOrders;
     notifyListeners();
   }
-
 }

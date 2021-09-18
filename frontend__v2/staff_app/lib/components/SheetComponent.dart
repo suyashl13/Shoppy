@@ -35,6 +35,7 @@ class _SheetComponentState extends State<SheetComponent> {
                       'payment_method': modeOfPayment,
                       'is_delivered': 'true'},
                       onSuccess: (data) {
+                        Provider.of<OrderContext>(context, listen: false).updateItem(oldElement: orderDetails, updatedElement: data);
                         Navigator.pop(context);
                         Navigator.pop(context);
                       }, onError: (error) { 

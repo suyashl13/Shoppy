@@ -29,7 +29,7 @@ class OrderSlugPage extends StatelessWidget {
       "Delivery Address": orderDetails['shipping_address'],
       "Delivery Pincode": orderDetails['pin_code'],
       "Delivery Phone no.": orderDetails['delivery_phone'],
-      'Order Status' : orderDetails['order_status'],
+      'Order Status': orderDetails['order_status'],
       "Subtotal": "Rs. " + orderDetails['subtotal'].toString(),
       "Date Ordered": DateFormat.yMMMMd()
           .format(DateTime.parse(orderDetails['date_time_created']))
@@ -84,43 +84,54 @@ class OrderSlugPage extends StatelessWidget {
                 ],
               ),
             ),
-            DraggableScrollableSheet(
-              minChildSize: 0.08,
-              initialChildSize: 0.08,
-              maxChildSize: 0.64,
-              builder: (context, scrollController) => Container(
-                margin: EdgeInsets.symmetric(horizontal: 8),
-                padding: EdgeInsets.only(top: 8),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(12),
-                        topLeft: Radius.circular(12)),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(color: Colors.grey, blurRadius: 4.0)
-                    ]),
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Center(
+            orderDetails['order_status'] == 'Pending Verification'
+                ? Positioned(
+                    bottom: 12,
+                    left: MediaQuery.of(context).size.width / 8,
+                    child: Container(
+                      padding: EdgeInsets.all(12),
+                      color: Colors.black,
+                      width: double.maxFinite,
+                      child: Text("Call Customer and ask to verify the order."),
+                    ),
+                  )
+                : DraggableScrollableSheet(
+                    minChildSize: 0.08,
+                    initialChildSize: 0.08,
+                    maxChildSize: 0.64,
+                    builder: (context, scrollController) => Container(
+                      margin: EdgeInsets.symmetric(horizontal: 8),
+                      padding: EdgeInsets.only(top: 8),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(12),
+                              topLeft: Radius.circular(12)),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(color: Colors.grey, blurRadius: 4.0)
+                          ]),
+                      child: SingleChildScrollView(
+                        controller: scrollController,
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Icon(Icons.keyboard_arrow_up),
-                            Text("Checkout")
+                            Center(
+                              child: Column(
+                                children: [
+                                  Icon(Icons.keyboard_arrow_up),
+                                  Text("Checkout")
+                                ],
+                              ),
+                            ),
+                            Divider(),
+                            SheetComponent(orderDetails)
                           ],
                         ),
                       ),
-                      Divider(),
-                      SheetComponent(orderDetails)
-                    ],
-                  ),
-                ),
-              ),
-            )
+                    ),
+                  )
           ],
         )),
       );
