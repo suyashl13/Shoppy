@@ -141,7 +141,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     ...Provider.of<Order>(context)
                         .getOrders()
-                        .map((e) => e['order_status'] != 'Assigned'
+                        .map((e) => e['order_status'] == 'Delivered'
                             ? SizedBox()
                             : ListTile(
                                 leading: Icon(

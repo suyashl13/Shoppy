@@ -86,7 +86,7 @@ def subdealer_cart_id_route(request: WSGIRequest, cart_id: int) -> JsonResponse:
                     subdealer = Subdealer.objects.get(user=usr)
                     if not str(cart.pin_code).strip() in [str(subd_pincode).strip() for subd_pincode in
                                                           str(subdealer.pincodes).split(',')]:
-                        return JsonResponse({'ERR': 'Cant deliver product at this pincode'})
+                        return JsonResponse({'ERR': 'Cant deliver product at this pincode'}, status=400)
 
                 except Exception as e:
                     return JsonResponse({'ERR': str(e)}, status=400)
@@ -102,10 +102,12 @@ def subdealer_cart_id_route(request: WSGIRequest, cart_id: int) -> JsonResponse:
                             if cart.is_canceled or cart.is_delivered or cart.is_verified:
                                 return JsonResponse({'ERR': 'Unable to assign cancelled / delivered cart.'}, status=401)
                             assigned_user = CustomUser.objects.get(id=int(value))
+                            if not assigned_user.is_active:
+                                return JsonResponse({'ERR': 'Assigned user is inactive.'}, status=400)
                             setattr(cart, attribute, assigned_user)
                             cart.order_status = 'Dispatched'
                         except:
-                            return JsonResponse({'ERR': 'assigned user is invalid.'})
+                            return JsonResponse({'ERR': 'Assigned user is invalid.'}, status=400)
                     else:
                         setattr(cart, attribute, value)
 
