@@ -50,7 +50,7 @@ class BackendAuthHelper {
           .then((res) {
         if (res.statusCode == 200) {
           _preferences.setString('jwt', jsonDecode(res.body)['jwt']);
-          _preferences.setString('phone', jsonDecode(res.body)['user']['name']);
+          _preferences.setString('name', jsonDecode(res.body)['user']['name']);
           _preferences.setString(
               'phone', jsonDecode(res.body)['user']['phone']);
           onSuccess(jsonDecode(res.body));
@@ -73,9 +73,14 @@ class BackendAuthHelper {
 
     try {
       await http
-          .post(Uri.parse(BASE_URL + 'users/'), body: newUserData)
+          .post(Uri.parse(BASE_URL + 'users/staff/'), body: newUserData)
           .then((res) {
         if (res.statusCode == 200) {
+          print(res.body);
+          _preferences.setString('jwt', jsonDecode(res.body)['jwt']);
+          _preferences.setString('name', jsonDecode(res.body)['user']['name']);
+          _preferences.setString(
+              'phone', jsonDecode(res.body)['user']['phone']);
           onSuccess(jsonDecode(res.body));
         } else {
           throw jsonDecode(res.body)['ERR'];

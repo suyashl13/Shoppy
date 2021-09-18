@@ -17,7 +17,7 @@ def staff_route(request: WSGIRequest) -> JsonResponse:
         @access : PUBLIC
     """
     if request.method == 'POST':
-
+        print("STAFF USR")
         # Get required parameters
         try:
             name = request.POST['name']
@@ -26,7 +26,7 @@ def staff_route(request: WSGIRequest) -> JsonResponse:
             phone = request.POST['phone']
             address = request.POST['address']
             pincode = request.POST['pincode']
-            is_staff = get_absolute_boolean(request.POST['is_subdealer'])
+
             subdealer_code = request.POST['subdealer_code']
         except Exception as e:
             return JsonResponse({'ERR': 'Not Found ' + str(e)}, status=400)
@@ -44,14 +44,13 @@ def staff_route(request: WSGIRequest) -> JsonResponse:
         # Create a new user and perform login
         try:
             new_user = CustomUser()
+            new_user.is_subdealer = False
+            new_user.is_active = False
+            new_user.is_subdealer_staff = True
+
             for attribute, value in request.POST.dict().items():
                 if attribute == 'password':
                     new_user.set_password(raw_password=value)
-                elif attribute == 'is_staff':
-                    if value == 'false':
-                        return JsonResponse({'ERR': 'Unauthorized'}, status=401)
-                    else:
-                        new_user.is_staff = True
                 elif attribute == 'is_superuser':
                     if value == 'true':
                         return JsonResponse({'ERR': 'Unauthorized'}, status=401)

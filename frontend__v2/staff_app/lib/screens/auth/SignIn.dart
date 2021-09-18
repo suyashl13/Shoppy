@@ -24,6 +24,11 @@ class _SignInState extends State<SignIn> {
           children: [
             TextFormField(
               maxLength: 10,
+              onChanged: (val) {
+                setState(() {
+                  credentials['phone'] = val;
+                });
+              },
               decoration: InputDecoration(
                   labelText: "Phone No.", border: OutlineInputBorder()),
             ),
@@ -32,24 +37,31 @@ class _SignInState extends State<SignIn> {
             ),
             TextFormField(
               obscureText: true,
+              onChanged: (val) {
+                setState(() {
+                  credentials['password'] = val;
+                });
+              },
               decoration: InputDecoration(
                   labelText: "Password", border: OutlineInputBorder()),
             ),
-            MaterialButton(
-                child: Text("Login"),
-                onPressed: () async => await BackendAuthHelper()
-                        .signInAtBackend(
-                            credentials: {
-                          'phone': '7418529630',
-                          'password': 'slaw1113'
-                        },
-              onSuccess: (res) {
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => AuthWrapper()));
-              },
-              onError: (err) {
-                print(err);
-              }))
-            
+            Container(
+              margin: EdgeInsets.only(top: 12),
+              width: double.maxFinite,
+              child: ElevatedButton(
+                  child: Text("Login"),
+                  onPressed: () async =>
+                      await BackendAuthHelper().signInAtBackend(
+                          credentials: credentials,
+                          onSuccess: (res) {
+                            Navigator.pushReplacement(context,
+                                MaterialPageRoute(builder: (_) => AuthWrapper()));
+                          },
+                          onError: (err) {
+                            ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text(err), backgroundColor: Colors.red,));
+                          })),
+            )
           ],
         ),
       ),

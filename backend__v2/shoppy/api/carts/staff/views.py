@@ -19,11 +19,12 @@ def staff_cart_route(request: WSGIRequest):
     usr = auth_result['user']
 
     # Validations
-    if not usr.is_active:
-        return JsonResponse({'ERR': 'Staff Deactivated.'}, status=400)
-
     if not usr.is_subdealer_staff:
         return JsonResponse({'ERR': 'Unauthorized'}, status=401)
+
+    print(usr.is_active)
+    if usr.is_active is False:
+        return JsonResponse({'ERR': 'Staff Deactivated.'}, status=400)
 
     if request.method == 'GET':
         try:
