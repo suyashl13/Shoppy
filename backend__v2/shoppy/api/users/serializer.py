@@ -1,5 +1,5 @@
-from .models import CustomUser, Session, Subdealer
-from rest_framework.serializers import HyperlinkedModelSerializer, ModelSerializer
+from .models import CustomUser, Session, Subdealer, ChannelPartner
+from rest_framework.serializers import ModelSerializer
 
 
 class UserSerializers(ModelSerializer):
@@ -45,4 +45,10 @@ class SessionSerializer(ModelSerializer):
 class SubdealerSerializer(ModelSerializer):
     class Meta:
         model = Subdealer
+        fields = '__all__'
+
+
+class ChannelPartnerSerializer(ModelSerializer):
+    class Meta:
+        model = ChannelPartner
         fields = '__all__'

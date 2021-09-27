@@ -34,6 +34,8 @@ class CourierDelivery(models.Model):
     courier_name = models.CharField(max_length=50)
     courier_tracking_id = models.CharField(max_length=50)
     cart = models.OneToOneField(Cart, on_delete=models.SET_NULL, null=True)
+    date_time_created = models.DateTimeField(auto_now_add=True)
+    date_time_updated = models.DateTimeField(auto_now=True)
 
 
 class CartItem(models.Model):

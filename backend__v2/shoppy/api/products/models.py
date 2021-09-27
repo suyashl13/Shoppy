@@ -37,12 +37,13 @@ class Product(models.Model):
     tax_percentage = models.FloatField()
     base_price = models.FloatField(default=0.0)
 
-    date_time_created = models.DateTimeField(auto_now=True)
-    date_time_updated = models.DateTimeField(auto_now_add=True)
+    date_time_created = models.DateTimeField(auto_now_add=True)
+    date_time_updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title + ' (' + str(self.id) + ')'
 
     def save(self, *args, **kwargs):
-        self.price = (float(self.tax_percentage) / 100 * float(self.base_price)) - (float(self.discount) / 100 * float(self.base_price))
+        #  TODO: Solve wrong MRP BUG.
+        self.price = (float(self.tax_percentage) / 100 * float(self.base_price)) + float(self.base_price) - (float(self.discount) / 100 * float(self.base_price))
         super(Product, self).save(*args, **kwargs)

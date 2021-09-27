@@ -13,7 +13,6 @@ export default function OrderSlugPage(props) {
 
     if (!orders) { return <Redirect to={{ pathname: '/' }} /> }
 
-
     return (
         <div className='container mt-5'>
             <div className="row justify-content-center">
@@ -73,30 +72,30 @@ export default function OrderSlugPage(props) {
                                         <td>
                                             {
                                                 orders[id]?.assigned_to ?
-                                                    `${orders[id]?.assigned_to?.name} ${orders[id]?.assigned_to?.phone}`
-                                                    : "No Assigned yet"
+                                                    `${orders[id]?.assigned_to?.name} ${orders[id]?.assigned_to?.phone}` : "No Assigned yet"
                                             } </td>
                                     </tr>
                                     <tr>
                                         <td>Ordered Date-Time</td>
-                                        <td>{tConvert(orders[id]?.date_time_created.split('+')[0].split('T')[1].split('.')[0])} ({tConvert(orders[id]?.date_time_created.split('+')[0].split('T')[0])})</td>
+                                        <td>{orders[id]?.date_time_created.split('T')[0]}</td>
                                     </tr>
                                     <tr>
                                         <td>Updated Cart Date-Time</td>
-                                        <td>{tConvert(orders[id]?.date_time_updated.split('+')[0].split('T')[1].split('.')[0])} ({tConvert(orders[id]?.date_time_created.split('+')[0].split('T')[0])})</td>
+                                        <td>{orders[id]?.date_time_updated.split('T')[0]}</td>
                                     </tr>
                                 </tbody>
                             </table>
                             <br />
                             {
-                                orders[id]?.is_canceled ? null : <div className="row">
-                                    <div className="col-lg-6 col-sm-12">
-                                        <StaffDelivery cartId={orders[id]?.id} />
+                                orders[id]?.is_delivered ? null :
+                                    orders[id]?.is_canceled ? null : <div className="row">
+                                        <div className="col-lg-6 col-sm-12">
+                                            <StaffDelivery cartId={orders[id]?.id} />
+                                        </div>
+                                        <div className="col-lg-6 col-sm-12">
+                                            <CourierDelivery cartId={orders[id]?.id} />
+                                        </div>
                                     </div>
-                                    <div className="col-lg-6 col-sm-12">
-                                        <CourierDelivery cartId={orders[id]?.id} />
-                                    </div>
-                                </div>
                             }
                             <br />
                             <h4 className='mb-3'>Cart Items</h4>

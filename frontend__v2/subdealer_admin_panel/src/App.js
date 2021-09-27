@@ -61,7 +61,7 @@ function App() {
               <Route exact path='/login' component={LoginPage} />
               <Route exact path='/register' component={RegisterSubdealerPage} />
               <Route exact path='/error' component={ServerErrorPage} />
-              
+
               {/* Private Routes */}
               <ProtectedRoute exact path='/' component={HomePage} />
               <ProtectedRoute exact path='/orders' component={AllOrdersPage} />
@@ -73,6 +73,7 @@ function App() {
               <ProtectedRoute exact path='/profile/staff/:id' component={StaffSlugPage} />
               <ProtectedRoute exact path='/profile/co_subdealer/:id' component={CoSubdealerSlugPage} />
 
+              {/* 404 Route */}
               <Route component={PageNotFound}/>
             </Switch>
           </BrowserRouter>

@@ -167,7 +167,7 @@ def subdealer_courier_cart_id_route(request: WSGIRequest, cart_id: int) -> JsonR
             for attr, val in request_body.items():
                 if attr.split('_')[0] == 'courier':
                     setattr(courier, attr, val)
-
+            print(request_body)
             cart.order_status = "Sent via Courier"
             courier.save()
             cart.save()

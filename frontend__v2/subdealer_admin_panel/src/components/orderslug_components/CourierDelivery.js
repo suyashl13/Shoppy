@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { toast } from 'react-toastify';
 import { assignDeliveryToCourierAtBackend } from '../../helpers/BackendCartHelper'
 
 export default function CourierDelivery(props) {
@@ -8,15 +9,16 @@ export default function CourierDelivery(props) {
         courier_tracking_id: '',
     })
 
-
-
-
     const assignToCourier = async (orderData) => {
         await assignDeliveryToCourierAtBackend(props?.cartId, orderData, {
             onSuccess: (res) => {
                 console.log(res)
             }, onError: (err) => {
-                console.error({ err });
+                if (err?.err.response.data.ERR) {
+                    toast(err?.err.response.data.ERR, {type: 'error'})
+                } else {
+                    toast("Something went wrong.", {type: 'error'})
+                }
             }
         });
     }

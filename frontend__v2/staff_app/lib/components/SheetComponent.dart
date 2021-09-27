@@ -70,7 +70,7 @@ class _SheetComponentState extends State<SheetComponent> {
                     value: "COD",
                   ),
                   DropdownMenuItem(
-                    child: Text("GPAY"),
+                    child: Text("UPI"),
                     value: "UPI",
                   ),
                 ],

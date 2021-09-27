@@ -117,7 +117,6 @@ def subdealer_id_route(request: WSGIRequest, u_id: int) -> JsonResponse:
     if request.method == 'GET':
         if usr.id == u_id:
             subdealer_profile = SubdealerSerializer(Subdealer.objects.get(user=usr)).data
-            # TODO: Complete this module
 
             staff = UserSerializers(CustomUser.objects.filter(reporting_to=usr, is_subdealer_staff=True),
                                     many=True).data

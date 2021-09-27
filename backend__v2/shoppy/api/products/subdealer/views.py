@@ -40,6 +40,7 @@ def products_subdealers_route(request: WSGIRequest) -> JsonResponse:
                     if attr in ["discount", "tax_percentage"]:
                         setattr(new_product, attr, float(val))
                     if attr == 'category':
+                        # Todo: Solve Category bug..
                         new_product.category = Category.objects.get(id=val)
                     else:
                         setattr(new_product, attr, True) if int(request_body['available_stock']) > 0 \

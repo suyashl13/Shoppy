@@ -27,7 +27,7 @@ export default function RegisterSubdealerPage({ history }) {
                     {'Register as Subdealer'.toUpperCase()}
                 </h3></center>
 
-                <form className='p-4 mt-5' onSubmit={e => {
+                <form className='p-4 mt-5 border rounded' onSubmit={e => {
                     e.preventDefault()
                     if (formData.password !== formData.confPassword) {
                         toast('Password confirmation failed', {type:"error"})
@@ -86,7 +86,6 @@ export default function RegisterSubdealerPage({ history }) {
 
                     <button type="submit" className="btn btn-primary mt-3">Register as Subdealer</button>
                 </form>
-                {JSON.stringify(formData)}
             </div>
         </div>
     )

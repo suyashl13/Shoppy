@@ -57,7 +57,7 @@ export default function LoginPage({ history }) {
                     {'Login to Subdealer Administration'.toUpperCase()}
                 </h3></center>
 
-                <form className='p-4 mt-5' onSubmit={e => {
+                <form className='p-4 mt-5 border rounded' onSubmit={e => {
                     e.preventDefault()
                     _performLogin(credentials);
                 }}>

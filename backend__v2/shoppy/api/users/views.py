@@ -182,7 +182,7 @@ def logout_route(request: WSGIRequest):
 def check_user(request, phone_number):
     """
         @route : /users/check_user/<str:phone_number>/
-        @description : A route to check user exsistance.
+        @description : A route to check user existence.
         @type : [ GET ]
         @access : PUBLIC
     """

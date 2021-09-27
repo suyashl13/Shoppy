@@ -1,0 +1,22 @@
+.info-card {
+  height: 9rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+  padding: 18px;
+  border-radius: 8px;
+}
+
+.info-card-count {
+  font-size: 38px;
+  font-weight: bolder;
+  color: white;
+  overflow: auto;
+  text-overflow: clip;
+}
+
+.info-card-title {
+  text-transform: uppercase;
+  color: white;
+}
