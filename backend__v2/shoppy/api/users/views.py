@@ -1,4 +1,4 @@
-from .models import CustomUser, Session, Subdealer
+from .models import CustomUser, Session, Subdealer, ChannelPartner
 from django.contrib.auth import login, logout
 from django.http.response import JsonResponse
 from rest_framework import status
@@ -28,6 +28,7 @@ def user_route(request: WSGIRequest) -> JsonResponse:
             phone = request.POST['phone']
             address = request.POST['address']
             pincode = request.POST['pincode']
+            ref_code = request.POST['ref_code']
             is_subdealer = get_absolute_boolean(request.POST['is_subdealer'])
         except Exception as e:
             return JsonResponse({'ERR': 'Not Found ' + str(e)}, status=400)
@@ -41,6 +42,8 @@ def user_route(request: WSGIRequest) -> JsonResponse:
             return JsonResponse({'ERR': 'Invalid Pincode.'}, status=status.HTTP_400_BAD_REQUEST)
         elif str(email).find('@') == -1:
             return JsonResponse({'ERR': 'Invalid email.'}, status=status.HTTP_400_BAD_REQUEST)
+        if ref_code is '':
+            ref_code = None
 
         # Create a new user and perform login
         try:
@@ -54,6 +57,14 @@ def user_route(request: WSGIRequest) -> JsonResponse:
                 elif attribute == 'is_superuser':
                     if value == 'true':
                         return JsonResponse({'ERR': 'Unauthorized'}, status=401)
+                elif attribute == 'ref_code':
+                    # register with channel partner.
+                    if ref_code is not None:
+                        try:
+                            cp = ChannelPartner.objects.get(ref_code=ref_code)
+                            new_user.ref_by = cp
+                        except Exception:
+                            return JsonResponse({'ERR': "Invalid reference code. If you don't have any please leave it blank."}, status=400)
                 else:
                     setattr(new_user, attribute, value)
 

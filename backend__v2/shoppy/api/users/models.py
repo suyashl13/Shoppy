@@ -28,7 +28,7 @@ class CustomUser(AbstractUser):
     date_time_updated = models.DateTimeField(auto_now=True)
 
     reporting_to = models.ForeignKey('self', on_delete=models.CASCADE, related_name='c_user', blank=True, null=True)
-    ref_by = models.ForeignKey('users.ChannelPartner', on_delete=models.CASCADE, blank=True, null=True)
+    ref_by = models.ForeignKey('users.ChannelPartner', on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} ({str(self.phone)}) ({str(self.id)})"
@@ -60,7 +60,7 @@ class Session(models.Model):
 
 
 class ChannelPartner(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.SET_NULL, default=None, null=True)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, default=None, null=True)
     ref_code = models.CharField(max_length=8)
     is_active = models.BooleanField(default=False)
 
