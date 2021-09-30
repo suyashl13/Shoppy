@@ -1,10 +1,12 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { loginContext } from '../contexts/loginContext'
+import { logoutAtBackend } from '../helpers/BackendAuthHelpers'
 
 export default function NavBar() {
 
-    const { isLoggedIn } = useContext(loginContext)
+    const { isLoggedIn, setIsLoggedIn } = useContext(loginContext)
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -17,7 +19,24 @@ export default function NavBar() {
                     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                         {
                             isLoggedIn ? <li className="nav-item">
-                                <Link className="nav-link" to='/'>Home</Link>
+                                <Link
+                                    onClick={
+                                        async () => {
+                                            await logoutAtBackend({
+                                                onSuccess: () => {
+                                                    localStorage.clear();
+                                                    setIsLoggedIn(false)
+                                                    toast("Logged out Successfully..", { type: 'info' })
+                                                },
+                                                onError: () => {
+                                                    localStorage.clear();
+                                                    setIsLoggedIn(false)
+                                                    toast("Unable to clear session.", { type: 'error' })
+                                                },
+                                            })
+                                        }
+                                    }
+                                    className="nav-link" to='/login'>logout</Link>
                             </li> :
                                 <>
                                     <li className="nav-item"><Link className="nav-link" to='/login'>Login</Link></li>

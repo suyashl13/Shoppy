@@ -1,6 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { useEffect, useState } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import './App.css';
 import NavBar from './components/NavBar';
 import ProtectedRoute from './components/router/ProtectedRoute';
@@ -9,6 +10,7 @@ import { checkAuthSession } from './helpers/BackendAuthHelpers';
 import LoginPage from './screens/auth/LoginPage';
 import SignUp from './screens/auth/SignUp';
 import HomePage from './screens/home/HomePage';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
 
@@ -21,6 +23,7 @@ function App() {
 
   return <>
     <BrowserRouter>
+    <ToastContainer/>
       <loginContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
         <NavBar />
         <Switch>

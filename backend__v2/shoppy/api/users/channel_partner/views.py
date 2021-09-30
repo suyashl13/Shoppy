@@ -95,3 +95,47 @@ def channel_partner_route(request: WSGIRequest) -> JsonResponse:
             return JsonResponse({'ERR': str(e)}, status=400)
 
     return JsonResponse({'ERR': 'Invalid HTTP method.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+@csrf_exempt
+def channel_partner_login_route(request: WSGIRequest) -> JsonResponse:
+    """
+        @route : /users/login/
+        @description : A route to login the user into app.
+        @type : [ POST ]
+        @access : PUBLIC
+    """
+
+    if request.method == 'POST':
+        # Get required parameters
+        try:
+            phone = request.POST['phone']
+            password = request.POST['password']
+        except Exception as e:
+            return JsonResponse({'ERR': 'Not Found ' + str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Check role
+        try:
+            usr = CustomUser.objects.get(phone=phone)
+            if not usr.is_channel_partner:
+                return JsonResponse({'ERR': 'Unauthorized user.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+            # Perform user login
+            login_response = perform_login(phone, password, request.META['HTTP_USER_AGENT'])
+            if login_response is False:
+                return JsonResponse({'ERR': 'Unable to login.'}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                try:
+                    channel_partner = ChannelPartner.objects.get(user=usr)
+                    channel_partner = ChannelPartnerSerializer(channel_partner).data
+                except:
+                    channel_partner = None
+                return JsonResponse(
+                    {'user': UserSerializers(usr).data, 'jwt': f"{usr.id}.{login_response['token']}",
+                     'channel_partner': channel_partner},
+                    safe=False)
+        except Exception as e:
+            return JsonResponse({'ERR': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    else:
+        return JsonResponse({'ERR': 'Invalid HTTP method.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
