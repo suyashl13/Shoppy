@@ -22,6 +22,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
       addressLine1,
       addressLine2,
       addressLine3,
+      ref_code,
       phone = "";
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
@@ -191,7 +192,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                             onSaved: (val) {
                               pinCode = val!;
                               setState(() {
-                                addressLine3 = "(PIN : " + val+ ")";
+                                addressLine3 = "(PIN : " + val + ")";
                               });
                             },
                             keyboardType: TextInputType.number,
@@ -208,6 +209,21 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                       ),
                     ],
                   ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      onSaved: (val) {
+                        setState(() {
+                          ref_code = val!;
+                        });
+                      },
+                      maxLength: 8,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: "SJE8VP5R",
+                           labelText: "Reference Code"),
+                    ),
+                  ),
                   MaterialButton(
                       color: Colors.green,
                       textColor: Colors.white,
@@ -218,19 +234,26 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                           try {
                             await BackendAuthHelper().createAccountAtBackend(
                                 firstName: firstName.trim(),
-                                lastName:  lastName.trim(),
-                                phone:  phone.substring(1),
+                                lastName: lastName.trim(),
+                                phone: phone.substring(1),
                                 email: email.trim(),
                                 password: password.trim(),
-                                pincode:  pinCode.toString().trim(),
-                                address:  addressLine1 + "\n" + addressLine2 + " " + addressLine3,
-                                onSuccess:  (data) {
-                                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=> Initializer()));
-                                }, onError:  (err) {
-                                  ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(content: Text(err.toString())));
-                                }
-                                );
+                                pincode: pinCode.toString().trim(),
+                                address: addressLine1 +
+                                    "\n" +
+                                    addressLine2 +
+                                    " " +
+                                    addressLine3,
+                                ref_code: ref_code,
+                                onSuccess: (data) {
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (_) => Initializer()));
+                                },
+                                onError: (err) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(err.toString())));
+                                });
                           } catch (e) {
                             return showDialog(
                               context: context,
@@ -247,7 +270,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                           }
                         }
                       },
-                      child: Text("Create account."))
+                      child: Text("Create an Account.")),
+                      SizedBox(height: 24,)
                 ],
               ),
             ),

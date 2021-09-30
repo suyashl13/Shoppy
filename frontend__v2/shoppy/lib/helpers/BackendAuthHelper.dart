@@ -56,6 +56,7 @@ class BackendAuthHelper {
       password,
       pincode,
       address,
+      ref_code,
       required onSuccess(data),
       required onError(error)}) async {
     sharedPref = await SharedPreferences.getInstance();
@@ -68,6 +69,7 @@ class BackendAuthHelper {
     formData['password'] = password;
     formData['is_subdealer'] = 'false';
     formData['address'] = address;
+    formData['ref_code'] = ref_code == null ? "" : ref_code;
 
     try {
       await http
