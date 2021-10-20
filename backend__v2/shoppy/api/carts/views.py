@@ -6,6 +6,8 @@ from .helper import add_item_to_cart, get_child_cart_items, get_absolute_boolean
 from .serializers import CartSerializer
 from django.views.decorators.csrf import csrf_exempt
 from django.http import QueryDict
+from ..users.serializer import UserSerializers
+from ..users.models import CustomUser
 
 
 # Views
@@ -13,7 +15,7 @@ from django.http import QueryDict
 def cart_route(request: WSGIRequest) -> JsonResponse:
     """
         @route : /carts/
-        @description : A route to create a new cart or get exsisting carts.
+        @description : A route to create a new cart or get existing carts.
         @type : [ POST, GET ]
         @allowed_roles : [ Customer, Subdealer, Superuser, Staff ]
         @access : PRIVATE
@@ -62,6 +64,11 @@ def cart_route(request: WSGIRequest) -> JsonResponse:
                 for cart in usr_carts:
                     cart = dict(cart)
                     cart['cart_items'] = get_child_cart_items(cart['id'], request)
+                    if cart['assigned_to'] is not None:
+                        try:
+                            cart['assigned_to'] = UserSerializers(CustomUser.objects.get(id=cart['assigned_to'])).data
+                        except Exception:
+                            cart['assigned_to'] = None
                     res.append(cart)
 
                 return JsonResponse(res, safe=False, status=200)

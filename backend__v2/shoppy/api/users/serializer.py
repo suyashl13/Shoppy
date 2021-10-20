@@ -31,7 +31,7 @@ class UserSerializers(ModelSerializer):
         model = CustomUser
         extra_kwargs = {'password': {'write_only': True}}
         fields = (
-            'id', 'name', 'email', 'password',
+            'id', 'name', 'email', 'password', 'reporting_to', 'ref_by',
             'is_active', 'phone', 'is_staff', 'pincode', 'address', 'is_subdealer', 'is_admin_subdealer',
             'date_time_created', 'date_time_updated')
 

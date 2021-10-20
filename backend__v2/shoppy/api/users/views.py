@@ -137,7 +137,7 @@ def login_route(request: WSGIRequest) -> JsonResponse:
         # Check role
         try:
             usr = CustomUser.objects.get(phone=phone)
-            if usr.is_staff or usr.is_superuser:
+            if usr.is_subdealer_staff:
                 return JsonResponse({'ERR': 'Invalid login route'}, status=status.HTTP_401_UNAUTHORIZED)
 
             # Perform user login

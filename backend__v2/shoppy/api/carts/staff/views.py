@@ -31,9 +31,12 @@ def staff_cart_route(request: WSGIRequest):
             deliverable_carts = CartSerializer(Cart.objects.filter(assigned_to=usr, is_verified=False), many=True).data
             res = []
             for deliverable_cart in deliverable_carts:
-                deliverable_cart['cart_items'] = get_child_cart_items(deliverable_cart['id'], request)
-                deliverable_cart['user'] = UserSerializers(CustomUser.objects.get(id=deliverable_cart['user'])).data
-                res.append(deliverable_cart)
+                try:
+                    deliverable_cart['cart_items'] = get_child_cart_items(deliverable_cart['id'], request)
+                    deliverable_cart['user'] = UserSerializers(CustomUser.objects.get(id=deliverable_cart['user'])).data
+                    res.append(deliverable_cart)
+                except:
+                    pass
             return JsonResponse(res, safe=False)
         except Exception as e:
             return JsonResponse({'ERR': str(e)}, status=400)
