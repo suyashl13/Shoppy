@@ -1,8 +1,6 @@
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shoppy/FirebaseAuthWrapper.dart';
-import 'package:shoppy/helpers/BackendAuthHelper.dart';
 import 'package:shoppy/services/FirebaseAuthService.dart';
 
 class AuthenticationPage extends StatefulWidget {
@@ -135,25 +133,27 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                           padding:
                               EdgeInsets.only(left: 25.0, right: 25.0, top: 12),
                           child: MaterialButton(
-                            elevation: 0,
+                              elevation: 0,
                               color: Colors.green,
                               textColor: Colors.white,
                               child: Center(
-                                  child: 
-                                  _isLoading ? Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: SizedBox(
-                                      height: 18,
-                                      width: 18,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 3,
-                                        valueColor: AlwaysStoppedAnimation(Colors.white),
-                                      ),
-                                    ),
-                                  ) :
-                                  codeSent
-                                      ? Text('Login')
-                                      : Text('Verify')),
+                                  child: _isLoading
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: SizedBox(
+                                            height: 18,
+                                            width: 18,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 3,
+                                              valueColor:
+                                                  AlwaysStoppedAnimation(
+                                                      Colors.white),
+                                            ),
+                                          ),
+                                        )
+                                      : codeSent
+                                          ? Text('Login')
+                                          : Text('Verify')),
                               onPressed: () async {
                                 try {
                                   if (formKey.currentState!.validate()) {
@@ -206,7 +206,8 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
         _isLoading = false;
       });
       print(authException.message);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(authException.message.toString())));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(authException.message.toString())));
     };
 
     final PhoneCodeSent smsSent = (String verId, [int? forceResend]) {
@@ -220,7 +221,9 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
     final PhoneCodeAutoRetrievalTimeout autoTimeout = (String verId) {
       this.verificationId = verId;
       print("************ Time Out ************");
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Verification failed.")));
+      setState(() {
+        _isLoading = false;
+      });
     };
 
     try {
@@ -232,7 +235,9 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
           codeSent: smsSent,
           codeAutoRetrievalTimeout: autoTimeout);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Unable To Login.."),));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Unable To Login.."),
+      ));
     }
   }
 }

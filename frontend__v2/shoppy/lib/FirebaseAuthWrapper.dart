@@ -79,7 +79,6 @@ class _InitializerState extends State<Initializer> {
       }
     },
     (error) {
-      print(error);
           ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text("App Initialization error.")));
         });

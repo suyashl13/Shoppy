@@ -6,10 +6,11 @@ import 'package:shoppy/screens/history/OrderDialogHelper.dart';
 
 // ignore: must_be_immutable
 class OrderDetailsPage extends StatelessWidget {
-  late Map orderDetails;
+  Map orderDetails;
   OrderDetailsPage({required this.orderDetails});
 
   _getOrderDetails() {
+    print(this.orderDetails['courier_details']);
     Map orderDetails = {
       'Date Ordered':
           "${DateFormat.yMMMMd().format(DateTime.parse(this.orderDetails['date_time_created'].toString().split('T')[0]))}",
@@ -20,6 +21,10 @@ class OrderDetailsPage extends StatelessWidget {
       'Order Status': this.orderDetails['order_status'],
       'Address': this.orderDetails['shipping_address']
     };
+    if (this.orderDetails['courier_details'] != null) {
+      orderDetails['Courier Name'] = this.orderDetails['courier_details']['courier_name'];
+      orderDetails['Courier Tracking ID'] = this.orderDetails['courier_details']['courier_tracking_id'];
+    }
     return orderDetails;
   }
 

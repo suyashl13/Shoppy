@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shoppy/contexts/Order.dart';
@@ -34,8 +35,12 @@ class _HistoryPageState extends State<HistoryPage> {
                           fontSize: 28,
                           fontWeight: FontWeight.bold),
                     ),
-                    GestureDetector(
-                      onTap: () async {
+                  ],
+                ),
+                Divider(),
+                Expanded(
+                    child: RefreshIndicator(
+                      onRefresh: () async {
                         await BackendProductsHelper().getAvailableProducts(
                             (data) {
                           Provider.of<Product>(context, listen: false)
@@ -53,36 +58,25 @@ class _HistoryPageState extends State<HistoryPage> {
                               MaterialPageRoute(builder: (_) => ErrorPage()));
                         });
                       },
-                      child: Container(
-                        padding: EdgeInsets.all(8),
-                        child: Icon(Icons.refresh_outlined),
-                        decoration: BoxDecoration(
-                            color: Colors.black12,
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                    ),
-                  ],
-                ),
-                Divider(),
-                Expanded(
-                    child: ListView.builder(
-                  itemCount: orderList.length,
-                  itemBuilder: (_, index) => ListTile(
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => OrderDetailsPage(orderDetails: orderList[index]))),
-                    title: Text(
-                        "${DateFormat.yMMMMd().format(DateTime.parse(orderList[index]['date_time_created'].toString().split('T')[0]))}"),
-                    subtitle: Text("₹ ${orderList[index]['subtotal']}"),
-                    trailing: Card(
-                        color: Colors.blueGrey,
-                        child: Padding(
-                          padding: const EdgeInsets.all(4),
-                          child: Text(
-                            "${orderList[index]['order_status']}",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        )),
-                  ),
-                ))
+                      child: ListView.builder(
+                                      itemCount: orderList.length,
+                                      itemBuilder: (_, index) => ListTile(
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => OrderDetailsPage(orderDetails: orderList[index]))),
+                      title: Text(
+                          "${DateFormat.yMMMMd().format(DateTime.parse(orderList[index]['date_time_created'].toString().split('T')[0]))}"),
+                      subtitle: Text("₹ ${orderList[index]['subtotal']}"),
+                      trailing: Card(
+                          color: Colors.blueGrey,
+                          child: Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: Text(
+                              "${orderList[index]['order_status']}",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          )),
+                                      ),
+                                    ),
+                    ))
               ],
             );
           },
