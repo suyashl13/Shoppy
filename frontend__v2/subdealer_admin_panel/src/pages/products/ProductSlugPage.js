@@ -9,7 +9,7 @@ export default function ProductSlugPage() {
 
     const { id } = useParams()
     const { product, setProduct } = useContext(productContext)
-    const myProduct = product?.products.filter(e => e.id == id)[0];
+    const myProduct = product?.products?.filter(e => e.id == id)[0];
 
     const [editedProductQuantity, setEditedProductQuantity] = useState(myProduct?.available_stock)
     const [isLoading, setIsLoading] = useState(false)

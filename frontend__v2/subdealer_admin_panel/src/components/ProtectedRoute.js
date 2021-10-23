@@ -2,8 +2,10 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Redirect, Route, useHistory } from 'react-router-dom'
 import { loginContext } from '../contexts/LoginContext'
 import { orderContext } from '../contexts/OrderContext';
+import { productContext } from '../contexts/ProductContext';
 import { profileContext } from '../contexts/ProfileContext';
 import { getDeliveralbleOrders } from '../helpers/BackendCartHelper';
+import { getProductsFromBackend } from '../helpers/BackendProductHelper';
 import { getSubdealerProfile } from '../helpers/BackendProfileHelper';
 import ProfilePage from '../pages/profile/ProfilePage';
 
@@ -12,6 +14,7 @@ export default function ProtectedRoute({ component: Component, ...rest }) {
     const { isLoggedIn, } = useContext(loginContext);
     const { orders, setOrders } = useContext(orderContext);
     const { profile, setProfile } = useContext(profileContext)
+    const { product, setProduct } = useContext(productContext)
     const [isActive, setisActive] = useState(true)
     const [isLoading, setisLoading] = useState(true)
     const history = useHistory()
@@ -28,6 +31,18 @@ export default function ProtectedRoute({ component: Component, ...rest }) {
                     setisLoading(false)
                     history.push('/profile')
                 }
+            }
+        })
+    }
+
+    const setProductsToContext = async () => {
+        getProductsFromBackend({
+            onSuccess: (e) => {
+                setProduct(e)
+            },
+            onError: (e) => {
+                setisActive(false)
+                history.push('/error');
             }
         })
     }
@@ -54,6 +69,8 @@ export default function ProtectedRoute({ component: Component, ...rest }) {
                 }
                 setOrdersToContext();
             }
+
+            if (!product) { setProductsToContext(); }
         }
     }, [])
 
