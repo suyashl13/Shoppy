@@ -9,6 +9,7 @@ from ...products.serializers import ProductSerializer
 from ..serializer import UserSerializers, SubdealerSerializer
 from api.helpers.auth_helper import AuthHelper
 from django.http import QueryDict
+import json
 
 
 @csrf_exempt
@@ -37,7 +38,7 @@ def superuser_subdealer_route(request: WSGIRequest):
 
     # Check Role
     if not usr.is_superuser:
-        return JsonResponse({'ERR': 'Unauthorized'}, status=401)
+        return JsonResponse({'ERR': 'Only superusers are allowed here.'}, status=401)
 
     if request.method == 'GET':
         all_subdealers = Subdealer.objects.all()
@@ -49,6 +50,13 @@ def superuser_subdealer_route(request: WSGIRequest):
                 subdealer['products'] = ProductSerializer(Product.objects.filter(addedby_subdealer__id=subdealer['id']),
                                                           many=True, context={'request': request}).data
                 subdealer['carts'] = get_subdealer_carts(subdealer['pincodes'], request)
+
+                for cart in subdealer['carts']:
+                    try:
+                        cart['user'] = UserSerializers(CustomUser.objects.get(id=cart['user'])).data
+                    except:
+                        cart['user'] = None
+
                 subdealer['staff'] = UserSerializers(
                     CustomUser.objects.filter(reporting_to__id=subdealer['user']['id']), many=True).data
                 res.append(subdealer)
@@ -77,11 +85,16 @@ def superuser_subdealer_id_route(request: WSGIRequest, subdealer_id: int):
     if request.method == 'PUT':
         request_body = QueryDict(request.body).dict()
 
-        for key, val in request_body.items():
-            if key == 'is_active':
-                setattr(subdealer, key, True) if val == 'true' else setattr(subdealer, key, False)
-            else:
-                setattr(subdealer, key, val)
+        try:
+            for key, val in request_body.items():
+                if key == 'is_active':
+                    setattr(subdealer, key, True) if val == 'true' else setattr(subdealer, key, False)
+                elif key == 'is_admin_subdealer':
+                    setattr(subdealer, key, True) if val == 'true' else setattr(subdealer, key, False)
+                else:
+                    setattr(subdealer, key, val)
+        except Exception as e:
+            return JsonResponse({"ERR": str(e)}, status=400)
 
         try:
             subdealer.save()
@@ -92,6 +105,13 @@ def superuser_subdealer_id_route(request: WSGIRequest, subdealer_id: int):
             subdealer['products'] = ProductSerializer(Product.objects.filter(addedby_subdealer__id=subdealer['id']),
                                                       many=True, context={'request': request}).data
             subdealer['carts'] = get_subdealer_carts(subdealer['pincodes'], request)
+
+            for cart in subdealer['carts']:
+                try:
+                    cart['user'] = UserSerializers(CustomUser.objects.get(id=cart['user'])).data
+                except:
+                    cart['user'] = None
+
             subdealer['staff'] = UserSerializers(CustomUser.objects.filter(reporting_to__id=subdealer['user']['id']),
                                                  many=True).data
             return JsonResponse(subdealer)
@@ -139,11 +159,14 @@ def superuser_subdealer_staff_id_route(request: WSGIRequest, staff_id: int):
     if request.method == 'PUT':
         request_body = QueryDict(request.body).dict()
 
-        for (key, val) in request_body.items():
-            if key == 'is_active':
-                setattr(staff_user, key, True) if val == 'true' else setattr(staff_user, key, False)
-            else:
-                setattr(staff_user, key, val)
+        try:
+            for (key, val) in request_body.items():
+                if key == 'is_active':
+                    setattr(staff_user, key, True) if val == 'true' else setattr(staff_user, key, False)
+                else:
+                    setattr(staff_user, key, val)
+        except Exception as e:
+            return JsonResponse({"ERR": str(e)}, status=400)
 
         try:
             staff_user.save()

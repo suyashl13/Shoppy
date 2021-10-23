@@ -16,7 +16,7 @@ from ...users.models import CustomUser
 def subdealer_cart_route(request: WSGIRequest) -> JsonResponse:
     """
         @route : /carts/
-        @description : A route to create a new cart or get exsisting carts.
+        @description : A route to create a new cart or get existing carts.
         @type : [ POST, GET ]
         @allowed_roles : [ Customer, Subdealer, Superuser, Staff ]
         @access : PRIVATE
@@ -48,6 +48,14 @@ def subdealer_cart_route(request: WSGIRequest) -> JsonResponse:
                     except:
                         pass
                     cart['cart_items'] = get_child_cart_items(cart['id'], request)
+
+                    try:
+                        cart['courier_details'] = CourierDeliverySerializer(
+                            CourierDelivery.objects.get(cart__id=cart['id'])).data
+                    except Exception as e:
+                        print(e)
+                        cart['courier_details'] = None
+
                     res.append(cart)
 
             return JsonResponse(res, safe=False, status=200)
@@ -169,6 +177,8 @@ def subdealer_courier_cart_id_route(request: WSGIRequest, cart_id: int) -> JsonR
                     setattr(courier, attr, val)
             print(request_body)
             cart.order_status = "Sent via Courier"
+            cart.is_delivered = True
+
             courier.save()
             cart.save()
             res = CartSerializer(cart).data

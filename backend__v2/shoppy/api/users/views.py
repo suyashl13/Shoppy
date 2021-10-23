@@ -42,7 +42,7 @@ def user_route(request: WSGIRequest) -> JsonResponse:
             return JsonResponse({'ERR': 'Invalid Pincode.'}, status=status.HTTP_400_BAD_REQUEST)
         elif str(email).find('@') == -1:
             return JsonResponse({'ERR': 'Invalid email.'}, status=status.HTTP_400_BAD_REQUEST)
-        if ref_code is '':
+        if ref_code == '':
             ref_code = None
 
         # Create a new user and perform login
@@ -64,7 +64,9 @@ def user_route(request: WSGIRequest) -> JsonResponse:
                             cp = ChannelPartner.objects.get(ref_code=ref_code)
                             new_user.ref_by = cp
                         except Exception:
-                            return JsonResponse({'ERR': "Invalid reference code. If you don't have any please leave it blank."}, status=400)
+                            return JsonResponse(
+                                {'ERR': "Invalid reference code. If you don't have any please leave it blank."},
+                                status=400)
                 else:
                     setattr(new_user, attribute, value)
 
@@ -137,7 +139,7 @@ def login_route(request: WSGIRequest) -> JsonResponse:
         # Check role
         try:
             usr = CustomUser.objects.get(phone=phone)
-            if usr.is_subdealer_staff:
+            if usr.is_subdealer or usr.is_admin_subdealer:
                 return JsonResponse({'ERR': 'Invalid login route'}, status=status.HTTP_401_UNAUTHORIZED)
 
             # Perform user login

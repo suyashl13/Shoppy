@@ -1,9 +1,9 @@
 from django.http.response import JsonResponse
 from ..helpers.auth_helper import AuthHelper
 from django.core.handlers.wsgi import WSGIRequest
-from .models import Cart, CartItem
+from .models import Cart, CartItem, CourierDelivery
 from .helper import add_item_to_cart, get_child_cart_items, get_absolute_boolean
-from .serializers import CartSerializer
+from .serializers import CartSerializer, CourierDeliverySerializer
 from django.views.decorators.csrf import csrf_exempt
 from django.http import QueryDict
 from ..users.serializer import UserSerializers
@@ -45,7 +45,7 @@ def cart_route(request: WSGIRequest) -> JsonResponse:
                     new_cart.delivery_phone = usr.phone
 
                 # Set order status as assigned and save cart
-                new_cart.order_status = 'Assigned'
+                new_cart.order_status = 'Order Confirmed'
                 new_cart.save()
                 return JsonResponse(CartSerializer(new_cart).data)
             except Exception as e:
@@ -64,6 +64,14 @@ def cart_route(request: WSGIRequest) -> JsonResponse:
                 for cart in usr_carts:
                     cart = dict(cart)
                     cart['cart_items'] = get_child_cart_items(cart['id'], request)
+
+                    # Check for courier details
+                    try:
+                        cart['courier_details'] = CourierDeliverySerializer(
+                            CourierDelivery.objects.get(cart__id=cart['id'])).data
+                    except Exception as e:
+                        cart['courier_details'] = None
+
                     if cart['assigned_to'] is not None:
                         try:
                             cart['assigned_to'] = UserSerializers(CustomUser.objects.get(id=cart['assigned_to'])).data
@@ -73,7 +81,6 @@ def cart_route(request: WSGIRequest) -> JsonResponse:
 
                 return JsonResponse(res, safe=False, status=200)
             except Exception as e:
-                print(e)
                 return JsonResponse({'ERR': str(e)}, status=500)
         else:
             return JsonResponse({'ERR': 'Unauthorized'}, status=401)
