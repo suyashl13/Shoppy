@@ -212,6 +212,10 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                   profileData.remove('id');
                                   profileData.remove('is_active');
                                   profileData.remove('is_staff');
+                                  profileData.remove('ref_by');
+                                  profileData.remove('reporting_to');
+                                  profileData.remove('is_admin_subdealer');
+                                  profileData.remove('is_admin_staff');
                                   profileData.remove('is_subdealer');
                                   await _updateProfileData(profileData);
                                 }

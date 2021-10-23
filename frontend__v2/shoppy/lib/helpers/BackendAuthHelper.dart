@@ -139,6 +139,7 @@ class BackendAuthHelper {
 
   updateProfileAtBackend(Map body, onSuccess(data), onError(err)) async {
     sharedPref = await SharedPreferences.getInstance();
+
     try {
       await http.put(
         Uri.parse(BASE_URL + 'users/${sharedPref.getString('jwt').toString().split('.')[0]}/'),
