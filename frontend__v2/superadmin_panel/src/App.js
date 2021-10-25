@@ -20,6 +20,11 @@ import SubdealerSlugPage from './screens/subdealer/SubdealerSlugPage';
 import { ProductContext } from './contexts/ProductContext';
 import ProductSlugPage from './screens/product_and_category/ProductSlugPage';
 import OrderDetailPage from './screens/order/OrderDetailPage';
+import { UserContext } from './contexts/UserContext';
+import AllUserPage from './screens/user/AllUserPage';
+import RedirectToSubdealer from './components/router_components/RedirectToSubdealer';
+import UserSlugPage from './screens/user/UserSlugPage';
+import PageNotFoundPage from './screens/error/PageNotFoundPage';
 
 function App() {
 
@@ -27,12 +32,13 @@ function App() {
   const [subdealerList, setSubdealerList] = useState(null)
   const [orderList, setOrderList] = useState(null)
   const [productAndCategoryList, setProductAndCategoryList] = useState(null)
+  const [userList, setUserList] = useState(null)
 
   useEffect(() => {
     checkAuthAtBackend({
       onSuccess: (res) => {
         setIsLoggedIn(res)
-      }, onError: (err) => {}
+      }, onError: (err) => { }
     })
   }, [])
 
@@ -50,21 +56,29 @@ function App() {
           <SubdealerContext.Provider value={{ subdealerList, setSubdealerList }}>
             <OrderContext.Provider value={{ orderList, setOrderList }}>
               <ProductContext.Provider value={{ productAndCategoryList, setProductAndCategoryList }}>
-                {/* Router */}
-                <>
-                  <Navbar />
-                  <Switch>
-                    <ProtectedRoute path='/' component={HomePage} exact />
-                    <ProtectedRoute exact path='/subdealers' component={SubdealerPage} />
-                    <ProtectedRoute exact path='/channel_partners' component={ChannelPartnerPage} />
-                    <ProtectedRoute exact path='/products' component={ProductPage} />
-                    <ProtectedRoute exact path='/subdealer/:subdealer_id' component={SubdealerSlugPage} />
-                    <ProtectedRoute exact path='/products/:product_id' component={ProductSlugPage} />
-                    <ProtectedRoute exact path='/orders/:order_id' component={OrderDetailPage} />
-                    <Route path='/login' exact component={LoginPage} />
-                  </Switch>
-                </>
-                {/* End Router */}
+                <UserContext.Provider value={{ userList, setUserList }}>
+
+                  {/* Router */}
+                  <>
+                    <Navbar />
+                    <Switch>
+                      <ProtectedRoute path='/' component={HomePage} exact />
+                      <ProtectedRoute exact path='/users' component={AllUserPage} />
+                      <ProtectedRoute exact path='/subdealers' component={SubdealerPage} />
+                      <ProtectedRoute exact path='/channel_partners' component={ChannelPartnerPage} />
+                      <ProtectedRoute exact path='/products' component={ProductPage} />
+                      <ProtectedRoute exact path='/subdealer/:subdealer_id' component={SubdealerSlugPage} />
+                      <ProtectedRoute exact path='/products/:product_id' component={ProductSlugPage} />
+                      <ProtectedRoute exact path='/orders/:order_id' component={OrderDetailPage} />
+                      <ProtectedRoute exact path='/redirectsubdealerbyuid/:redirect_user_id' component={RedirectToSubdealer} />
+                      <ProtectedRoute exact path='/users/:user_id' component={UserSlugPage} />
+                      <Route path='/login' exact component={LoginPage} />
+                      <Route component={PageNotFoundPage} />
+                    </Switch>
+                  </>
+                  {/* End Router */}
+
+                </UserContext.Provider>
               </ProductContext.Provider>
             </OrderContext.Provider>
           </SubdealerContext.Provider>

@@ -5,9 +5,11 @@ import { LoginContext } from '../../contexts/AuthContext'
 import { OrderContext } from '../../contexts/OrderContext'
 import { ProductContext } from '../../contexts/ProductContext'
 import { SubdealerContext } from '../../contexts/SubdealerContext'
+import { UserContext } from '../../contexts/UserContext'
 import { getOrderData } from '../../helpers/BackendCartHelper'
 import { getProductsAndCategories } from '../../helpers/BackendProductAndCategoryHelper'
 import { getSubdealerData } from '../../helpers/BackendSubdealerHelper'
+import { getUsersData } from '../../helpers/BackendUserHelper'
 
 export default function ProtectedRoute({ component: Component, ...rest }) {
 
@@ -16,6 +18,7 @@ export default function ProtectedRoute({ component: Component, ...rest }) {
     const { orderList, setOrderList } = useContext(OrderContext)
     const { productAndCategoryList, setProductAndCategoryList } = useContext(ProductContext)
     const [isLoading, setIsLoading] = useState(true)
+    const { userList, setUserList } = useContext(UserContext)
 
     const getApplicationData = () => {
         setIsLoading(true)
@@ -40,9 +43,20 @@ export default function ProtectedRoute({ component: Component, ...rest }) {
                 onSuccess: ({ data }) => {
                     setProductAndCategoryList(data);
                 },
-                onError: (err) => { 
-                    console.log({err})
-                    toast('Something went wrong.', { type: 'error' }) }
+                onError: (err) => {
+                    console.log({ err })
+                    toast('Something went wrong.', { type: 'error' })
+                }
+            })
+        }
+        if (!userList) {
+            getUsersData({
+                onSuccess: ({ data }) => {
+                    setUserList(data)
+                }, onError: (err) => {
+                    console.log({ err })
+                    toast('Something went wrong.', { type: 'error' })
+                }
             })
         }
         setIsLoading(false)

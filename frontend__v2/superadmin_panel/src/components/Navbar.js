@@ -12,6 +12,9 @@ export default function Navbar() {
                 <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
                     <ul className="navbar-nav">
                         <li className="nav-item">
+                            <Link className="nav-link" aria-current="page" to='/users'>Users</Link>
+                        </li>
+                        <li className="nav-item">
                             <Link className="nav-link" aria-current="page" to="/products">Products</Link>
                         </li>
                         <li className="nav-item">
@@ -23,7 +26,7 @@ export default function Navbar() {
                         <li className="nav-item">
                             <Link className="nav-link" aria-current="page" to="/signin">Logout</Link>
                         </li>
-                        
+
                     </ul>
                 </div>
             </div>

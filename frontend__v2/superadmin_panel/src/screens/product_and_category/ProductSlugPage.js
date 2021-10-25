@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useParams } from 'react-router'
+import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { useContext } from 'react/cjs/react.development'
 import { ProductContext } from '../../contexts/ProductContext'
+import { updateProductAtBackend } from '../../helpers/BackendProductAndCategoryHelper'
 
 export default function ProductSlugPage() {
 
@@ -9,6 +12,8 @@ export default function ProductSlugPage() {
     const { productAndCategoryList, setProductAndCategoryList } = useContext(ProductContext)
 
     const kProduct = productAndCategoryList?.products?.filter((ele) => ele.id == product_id)[0]
+
+    console.log(kProduct)
 
     return (
         <div className='container mt-5'>
@@ -36,7 +41,10 @@ export default function ProductSlugPage() {
                     </tr>
                     <tr>
                         <th>Subdealer</th>
-                        <td>{kProduct?.addedby_subdealer?.user?.name ? kProduct?.addedby_subdealer?.user?.name + ` (${kProduct?.addedby_subdealer.subdealer_code})` : 'No Information'}</td>
+                        <td>{kProduct?.addedby_subdealer?.user?.name ? <Link
+                            className='text-decoration-none'
+                            to={`/subdealer/${kProduct?.addedby_subdealer?.id}`}>
+                            {kProduct?.addedby_subdealer?.user?.name + ` (${kProduct?.addedby_subdealer.subdealer_code})`}</Link> : 'No Information'}</td>
                     </tr>
                     <tr>
                         <th>Available Stock</th>
@@ -48,7 +56,8 @@ export default function ProductSlugPage() {
                     </tr>
                     <tr>
                         <th>Active</th>
-                        <td>{kProduct?.is_active ? 'Yes' : 'No'}</td>
+                        <td className='d-flex justify-content-between'
+                        >{kProduct?.is_active ? 'Yes' : 'No'} <EditProductStatusButton product={kProduct} productAndCategoryList={productAndCategoryList} setProductAndCategoryList={setProductAndCategoryList} /> </td>
                     </tr>
                     <tr>
                         <th>Tax</th>
@@ -71,4 +80,36 @@ export default function ProductSlugPage() {
 
         </div>
     )
+}
+
+const EditProductStatusButton = ({ product, productAndCategoryList, setProductAndCategoryList }) => {
+
+    const [isLoading, setisLoading] = useState(false)
+
+    function updateProduct(updateObject) {
+        setisLoading(true)
+        updateProductAtBackend(product?.id, updateObject, {
+            onSuccess: ({ data }) => {
+                const updatedProductList = productAndCategoryList?.products?.map(e => {
+                    if (e.id == data.id) {
+                        console.log(data)
+                        return data;
+                    } else
+                        return e;
+                })
+                setProductAndCategoryList({ ...productAndCategoryList, products: updatedProductList });
+                toast('Successfully updated product', { type: 'info' })
+                setisLoading(false)
+            },
+            onError: () => {
+                toast("Unable to update object.", { type: 'error' })
+                setisLoading(false)
+            }
+        })
+    }
+
+    return <button className={!product?.is_active ? 'btn btn-sm btn-success m-1' : 'btn btn-sm btn-danger m-1'}
+        disabled={isLoading}
+        onClick={() => updateProduct({ is_active: !product?.is_active })}
+    >{isLoading ? 'Loading...' : !product?.is_active ? 'Activate' : 'Deactivate'}</button>
 }
