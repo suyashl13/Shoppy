@@ -4,12 +4,13 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .helper import get_subdealer_carts
 from ..models import CustomUser, Subdealer
+from ...carts.models import Cart
+from ...carts.serializers import CartSerializer
 from ...products.models import Product
 from ...products.serializers import ProductSerializer
 from ..serializer import UserSerializers, SubdealerSerializer
 from api.helpers.auth_helper import AuthHelper
 from django.http import QueryDict
-import json
 
 
 @csrf_exempt
@@ -25,7 +26,15 @@ def superuser_route(request: WSGIRequest):
         return JsonResponse({'ERR': 'Unauthorized'}, status=401)
 
     if request.method == 'GET':
-        return JsonResponse(UserSerializers(usr).data)
+        all_users = UserSerializers(CustomUser.objects.all(), many=True).data
+        for user in all_users:
+            if not (user['is_staff'] or user['is_superuser'] or user['is_subdealer'] or user['is_admin_subdealer'] or user['is_channel_partner'] or
+                    user['is_subdealer_staff']):
+                user['carts'] = CartSerializer(Cart.objects.filter(user__id=user['id']), many=True).data
+            else:
+                user['carts'] = None
+
+        return JsonResponse(all_users, safe=False)
 
 
 @csrf_exempt
@@ -90,7 +99,9 @@ def superuser_subdealer_id_route(request: WSGIRequest, subdealer_id: int):
                 if key == 'is_active':
                     setattr(subdealer, key, True) if val == 'true' else setattr(subdealer, key, False)
                 elif key == 'is_admin_subdealer':
-                    setattr(subdealer, key, True) if val == 'true' else setattr(subdealer, key, False)
+                    if val == 'true':
+                        subdealer.user.is_admin_subdealer = True
+                        subdealer.user.save()
                 else:
                     setattr(subdealer, key, val)
         except Exception as e:
@@ -126,6 +137,10 @@ def superuser_subdealer_staff_route(request: WSGIRequest):
         return JsonResponse(dict(ERR=auth_result['MSG']), status=400)
 
     usr = auth_result['user']
+
+    # Check Role
+    if not usr.is_superuser:
+        return JsonResponse({'ERR': 'Unauthorized'}, status=401)
 
     if request.method == 'GET':
         all_staff = UserSerializers(CustomUser.objects.filter(is_subdealer_staff=True), many=True).data
