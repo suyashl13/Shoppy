@@ -203,7 +203,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                             },
                             decoration: InputDecoration(
                                 border: OutlineInputBorder(),
-                                labelText: "Pincode"),
+                                labelText: "Pin Code"),
                           ),
                         ),
                       ),

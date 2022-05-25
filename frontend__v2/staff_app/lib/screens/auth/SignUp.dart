@@ -204,6 +204,8 @@ class _SignUpState extends State<SignUp> {
                                 MaterialPageRoute(builder: (_) => HomePage()));
                           },
                           onError: (err) {
+                            ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(content: Text(err)));
                             print(err);
                           });
                     }

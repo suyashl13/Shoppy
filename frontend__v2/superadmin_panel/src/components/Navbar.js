@@ -1,7 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom';
+import { LoginContext } from '../contexts/AuthContext';
 
 export default function Navbar() {
+
+    const { setIsLoggedIn } = useContext(LoginContext)
+
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
             <div className="container">
@@ -20,11 +24,16 @@ export default function Navbar() {
                         <li className="nav-item">
                             <Link className="nav-link" aria-current="page" to="/subdealers">Subdealers</Link>
                         </li>
-                        <li className="nav-item">
+                        {/* <li className="nav-item">
                             <Link className="nav-link" aria-current="page" to="/channel_partners">Channel Partners</Link>
-                        </li>
+                        </li> */}
                         <li className="nav-item">
-                            <Link className="nav-link" aria-current="page" to="/signin">Logout</Link>
+                            <Link className="nav-link" aria-current="page" onClick={
+                                () => {
+                                    setIsLoggedIn(false)
+                                    localStorage.clear()
+                                }
+                            } to="/login">Logout</Link>
                         </li>
 
                     </ul>

@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import { useContext } from 'react/cjs/react.development'
+import React, { useState, useContext } from 'react'
 import CategoryList from '../../components/products_and_categories/CategoryList'
 import ProductList from '../../components/products_and_categories/ProductList'
 import { ProductContext } from '../../contexts/ProductContext'
@@ -7,7 +6,6 @@ import { ProductContext } from '../../contexts/ProductContext'
 export default function ProductPage() {
 
     const [activeTab, setActiveTab] = useState('products')
-
     const { productAndCategoryList } = useContext(ProductContext)
 
     return (
@@ -25,9 +23,10 @@ export default function ProductPage() {
             <hr />
             {
                 activeTab === 'products' ?
-                <ProductList products={productAndCategoryList?.products} /> : 
-                <CategoryList categories={productAndCategoryList?.categories} />
+                    <ProductList products={productAndCategoryList?.products} /> :
+                    <CategoryList categories={productAndCategoryList?.categories} />
             }
+            <br />
         </div>
     )
 }

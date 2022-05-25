@@ -40,43 +40,47 @@ class _HistoryPageState extends State<HistoryPage> {
                 Divider(),
                 Expanded(
                     child: RefreshIndicator(
-                      onRefresh: () async {
-                        await BackendProductsHelper().getAvailableProducts(
-                            (data) {
-                          Provider.of<Product>(context, listen: false)
-                              .setProducts(data);
-                        }, (err) {
-                          Navigator.of(context).push(
-                              MaterialPageRoute(builder: (_) => ErrorPage()));
-                        });
+                  onRefresh: () async {
+                    await BackendProductsHelper().getAvailableProducts((data) {
+                      Provider.of<Product>(context, listen: false)
+                          .setProducts(data);
+                    }, (err) {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (_) => ErrorPage()));
+                    });
 
-                        await BackendCartsHelper().getUserCarts((data) {
-                          Provider.of<Order>(context, listen: false)
-                              .setOrders(data);
-                        }, (err) {
-                          Navigator.of(context).push(
-                              MaterialPageRoute(builder: (_) => ErrorPage()));
-                        });
-                      },
-                      child: ListView.builder(
-                                      itemCount: orderList.length,
-                                      itemBuilder: (_, index) => ListTile(
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => OrderDetailsPage(orderDetails: orderList[index]))),
-                      title: Text(
-                          "${DateFormat.yMMMMd().format(DateTime.parse(orderList[index]['date_time_created'].toString().split('T')[0]))}"),
-                      subtitle: Text("₹ ${orderList[index]['subtotal']}"),
-                      trailing: Card(
-                          color: Colors.blueGrey,
-                          child: Padding(
-                            padding: const EdgeInsets.all(4),
-                            child: Text(
-                              "${orderList[index]['order_status']}",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          )),
-                                      ),
-                                    ),
-                    ))
+                    await BackendCartsHelper().getUserCarts((data) {
+                      Provider.of<Order>(context, listen: false)
+                          .setOrders(data);
+                    }, (err) {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (_) => ErrorPage()));
+                    });
+                  },
+                  child: Scrollbar(
+                    child: ListView.builder(
+                      controller: ScrollController(),
+                      itemCount: orderList.length,
+                      itemBuilder: (_, index) => ListTile(
+                        onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => OrderDetailsPage(
+                                orderDetails: orderList[index]))),
+                        title: Text(
+                            "${DateFormat.yMMMMd().format(DateTime.parse(orderList[index]['date_time_created'].toString().split('T')[0]))}"),
+                        subtitle: Text("₹ ${orderList[index]['subtotal']}"),
+                        trailing: Card(
+                            color: Colors.blueGrey,
+                            child: Padding(
+                              padding: const EdgeInsets.all(4),
+                              child: Text(
+                                "${orderList[index]['order_status']}",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            )),
+                      ),
+                    ),
+                  ),
+                ))
               ],
             );
           },

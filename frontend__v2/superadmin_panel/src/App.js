@@ -14,7 +14,6 @@ import { ToastContainer } from 'react-toastify';
 import { SubdealerContext } from './contexts/SubdealerContext';
 import { OrderContext } from './contexts/OrderContext';
 import SubdealerPage from './screens/subdealer/SubdealerPage';
-import ChannelPartnerPage from './screens/ChannelPartnerPage';
 import ProductPage from './screens/product_and_category/ProductPage';
 import SubdealerSlugPage from './screens/subdealer/SubdealerSlugPage';
 import { ProductContext } from './contexts/ProductContext';
@@ -65,7 +64,6 @@ function App() {
                       <ProtectedRoute path='/' component={HomePage} exact />
                       <ProtectedRoute exact path='/users' component={AllUserPage} />
                       <ProtectedRoute exact path='/subdealers' component={SubdealerPage} />
-                      <ProtectedRoute exact path='/channel_partners' component={ChannelPartnerPage} />
                       <ProtectedRoute exact path='/products' component={ProductPage} />
                       <ProtectedRoute exact path='/subdealer/:subdealer_id' component={SubdealerSlugPage} />
                       <ProtectedRoute exact path='/products/:product_id' component={ProductSlugPage} />
